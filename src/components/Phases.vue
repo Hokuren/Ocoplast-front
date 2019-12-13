@@ -103,35 +103,26 @@
 </div>
 </template>
 
+
 <script>
-import Product from "./HelloWorld"
+
 export default {
   name: 'Phases',
   data () {
-    products: ['product1']
+    products: []
 
   },
   mounted () {
-    this.get()
+    this.getProducts()
   },
   methods: {
-        getProducts: function() {
-            this.$http.get('http://localhost:3000/products').then(function(respuesta){
-                            this.products = respuesta.body
-            })
-        },
-
-        get: function(){
-
-        this.$http.get('http://localhost:3000/products').then(response => {
-
+    getProducts: function() {
+      this.$http.get('http://localhost:3000/products').then(response => {
         this.products = response.body;
-
-        }, response => {
-            // error callback
-        });
-        }
-
+      },response => {
+        //error
+      })
+    }
   }
 }
 </script>
