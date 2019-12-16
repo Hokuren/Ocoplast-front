@@ -1,124 +1,203 @@
 <template>
     <div id="PeticionAjax">
-        <button @click="getProducts">Productos</button>
-        <div v-for="product in products" :key="product.id">
-            {{ product.name }}
-        </div>
 
-
-<div class="container">
-  <div class="row">
-    <div class="col-3">
-        <form>
-
-        <div class="form-group row">
-        <label for="inputPassword3" class="col-sm-4 col-form-label">Producto</label>
-        <select class="col-sm-8">
-            <option v-for="product in products" :key="product.id">{{ product.name }}</option>
-        </select> 
-        </div>  
-        
-        <div class="form-group row">
-            <label for="inputPassword3" class="col-sm-4 col-form-label">Fecha</label>
-            <div class="col-sm-8">
-                <input type="password" class="form-control" id="inputPassword3">
-            </div>
-        </div> 
-        <div class="form-group row">
-            <label for="inputPassword3" class="col-sm-4 col-form-label">Cantidad</label>
-            <div class="col-sm-8">
-                <input type="password" class="form-control" id="inputPassword3" v-model="weight">
-            </div>
-        </div>       
-        <div class="form-group row">
-            <label for="inputPassword3" class="col-sm-4 col-form-label">Costo </label>
-            <div class="col-sm-8">
-                <input type="password" class="form-control" id="inputPassword3" v-model="cost">
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary">Añadir Cantidad</button>
-            </div>
-        </div>
-        </form> 
-
-    <div>
-        <h6>Parametros</h6>
-        <p>{{ }}</p>
-    </div>
-
-    </div>
-    <div class="col-9">
-        <form>
-            <div class="form-group text-left">
-                <label for="formGroupExampleInput" >Fase anterior</label>
-                <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Dropdown button
-                </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
+      <div class="container">
+        <div class="row">
+          <div class="col-3">
+              <form v-on:submit.prevent="postQuantities" >
+                <div class="form-group row">
+                <label for="inputPassword3" class="col-sm-4 col-form-label">Producto</label>
+                <select class="col-sm-8" v-model="product_id">
+                    <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
+                </select> 
+                </div>  
+                
+                <div class="form-group row">
+                    <label for="inputPassword3" class="col-sm-4 col-form-label">Fecha</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="inputPassword3">
+                    </div>
+                </div> 
+                <div class="form-group row">
+                    <label for="inputPassword3" class="col-sm-4 col-form-label"> Cantidad </label>
+                    <div class="col-sm-8">
+                        <input type="Number" class="form-control" id="inputPassword3" v-model="weight" required>
+                    </div>
+                </div>       
+                <div class="form-group row">
+                    <label for="inputPassword3" class="col-sm-4 col-form-label"> Costo </label>
+                    <div class="col-sm-8">
+                        <input type="Number" class="form-control" id="inputPassword3" v-model="cost" required>
                     </div>
                 </div>
-            </div>
 
-            <div class="form-group text-left">
-                <label for="formGroupExampleInput" >Fase anterior</label>
-                <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Example input placeholder">
-            </div>
-            <div class="form-group text-left">
-                <label for="formGroupExampleInput2">Phase Actual</label>
-                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Another input placeholder">
-            </div>
-            <div class="form-group text-left">
-                <label for="formGroupExampleInput2">Product</label>
-                <input type="text" class="form-control" id="formGroupExampleInput3" placeholder="Another input placeholder">
-            </div>
-            <div class="form-group text-left">
-                <label for="formGroupExampleInput2">Precio por Kilo</label>
-                <input type="text" class="form-control" id="formGroupExampleInput4" placeholder="Another input placeholder">
-            </div>
-            <div class="form-group text-left">
-                <label for="formGroupExampleInput2">Peso en Kg</label>
-                <input type="text" class="form-control" id="formGroupExampleInput5" placeholder="Another input placeholder">
-            </div>
-            <div class="form-group text-left">
-                <label for="formGroupExampleInput2">Tratamientos</label>
-                <input type="text" class="form-control" id="formGroupExampleInput5" placeholder="Another input placeholder">
-            </div>
-
-            <div class="form-group row">
-                <div class="col-sm-10">
-                    <button type="submit" class="btn btn-primary">Cambiar Fase</button>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary">Añadir Cantidad</button>
+                    </div>
                 </div>
-            </div>
-        </form>    
-    </div>
-  </div>
-</div>
+              </form> 
 
+          <div class="alert alert-primary" role="alert" v-if="arlert_post_quantity">
+            <p>Cantidad Añadida con exito: 
+              <br>
+              peso: {{ alert_add_quantity.weight }}
+              <br>
+              Costo: {{ alert_add_quantity.cost }}
+            </p>
+          </div>
+          <div>
+              <h6>Parametros</h6>
+              <p>{{ product_id }}</p>
+              <p>{{ weight }}</p>
+              <p>{{ cost }}</p>
+              <p>{{ arlert_post_quantity }}</p>
+          </div>
 
+          </div>
+          <div class="col-9">
+              <form v-on:submit.prevent="postProductTreatmentPhase">
+                  <div class="form-group text-left">
+                    <label for="inputPassword3">Fase Anterior</label>
+                    <select class="col-sm-8" v-model="phase_id_previous">
+                        <option v-for="phase in phases" 
+                                :key="phase.id" 
+                                :value="phase.id"
+                                class="form-control">{{ phase.name }}</option>
+                    </select> 
+                  </div>
+                  <div class="form-group text-left">
+                    <label for="inputPassword3">Producto</label>
+                    <select class="col-sm-8" v-model="f_product_id">
+                        <option v-for="product in products" 
+                                :key="product.id" 
+                                :value="product.id"
+                                class="form-control">{{ product.name }}</option>
+                    </select> 
+                  </div>
 
-    </div> <!-- closed PeticionAjax -->
+                  <div class="form-group text-left">
+                    <label for="inputPassword3">Phase Actual</label>
+                    <select class="col-sm-8" v-model="phase_id">
+                        <option v-for="phase in phases" 
+                                :key="phase.id" 
+                                :value="phase.id"
+                                class="form-control">{{ phase.name }}</option>
+                    </select> 
+                  </div>
+                  <div class="form-group text-left">
+                      <label for="formGroupExampleInput2">Peso en Kg</label>
+                      <input type="number" class="form-control" id="formGroupExampleInput5" placeholder="Peso en Kilos" v-model="weight_phase" required>
+                  </div>
+                  <div class="form-group text-left">
+                      <label for="formGroupExampleInput2">Precio por Kilo</label>
+                      <input type="number" class="form-control" id="formGroupExampleInput4" placeholder="0" disabled>
+                  </div>
+    
+                  <div class="form-group text-left">
+                      <label for="formGroupExampleInput2">Tratamientos ({{ count_treatment }})</label>
+                      <button type="submit" class="btn btn-success" @click="addTreatment"> + </button>
+                      <button type="submit" class="btn btn-danger" @click="removeTreatment"> - </button>
+                      <br>
+                      <br>
+                      <div v-if="count_treatment > 0 ">
+                        <div v-for="(product_treatments_attribute in product_treatments_attributes" :key="product_treatments_attribute.id">
+                          <div class="card">
+                            <div class="card-body text-left">
+                            <div class="form-group text-left" >
+                              <label for="">Nombre del Tratamiento</label>
+                                <select class="col-sm-8" v-model="product_treatments_attribute.treatment_id" v-if="!product_treatments_attribute.checkbox_treatment">
+                                  <option v-for="treatment in treatments" 
+                                  :key="treatment.id" 
+                                  :value="treatment.id"
+                                  class="form-control"
+                                  v-model="treatment_id"
+                                  >{{ treatment.name }}</option>
+                                </select> 
+                              <div>
+                                <p>
+                                  <input type="checkbox" 
+                                          v-model="product_treatments_attribute.checkbox_treatment"
+                                          @change="validate_product_treatments_attributes_id()">
+                                  Nuevo Tratamiento
+                                  <input type="text" v-if="product_treatments_attribute.checkbox_treatment" v-model="product_treatments_attribute.treatment_new_name" >
+                                </p>
+                               </div>  
+                              <label for="">Costo del Tratamiento</label>
+                              <input type="number" v-model="product_treatments_attribute.treatment_cost" required>
+                            </div>
+                            </div>
+                          </div>
+                          <br>
+                        </div>
+                      </div>
+                  </div>
+
+                  <div class="form-group row">
+                      <div class="col-sm-10">
+                          <button type="submit" class="btn btn-primary">Cambiar Fase</button>
+                      </div>
+                  </div>
+
+              </form>  
+
+              <div>
+                <p>
+                  weight: {{ weight_phase }},
+                  <br>  
+                  phase_id_previous: {{ phase_id_previous }},
+                  <br>
+                  phase_id: {{ phase_id }},
+                  <br>
+                  product_id: {{ f_product_id }},
+                  <br>
+                  product_treatments_attributes: {{ product_treatments_attributes }}
+                </p>
+              </div>
+
+          </div>
+        </div>
+      </div>
+
+  </div> <!-- closed PeticionAjax -->
 </template> 
 
-
 <script>
+
 export default {
   name: 'PeticionAjax',
   data () {
     return {
+      arlert_post_quantity: false,
+      alert_add_quantity: [],
+      quantity: [],
       products: [],
-      cost: 0,
-      weight: 0
+      product_id: '',
+      cost: '',
+      weight: '',
+      phases: [],
+      f_product_id: '',
+      phase_id_previous: '',
+      phase_id: '',
+      weight_phase: '',
+      count_treatment: 0,
+      treatments: [],
+      checkbox_treatment: false,
+      product_treatments_attributes: [],
+      treatment_id: null,
+      treatment_new_name: null,
+      treatment_cost: null,
+      product_treatment_phase: [],
+      error_product_treatment_phase: ''
     }
   },
   mounted () {
-    this.getProducts()
+    this.getProducts();
+    this.getPhases();
+    this.getTreatments();
+  },
+  beforeUpdate () {
+
   },
   methods: {
     getProducts: function() {
@@ -128,15 +207,85 @@ export default {
         //error
       })
     },
-    postProducts: function() {
-      this.$http.get('http://localhost:3000/products').then(response => {
-        this.products = response.body;
+    getTreatments: function() {
+      this.$http.get('http://localhost:3000/treatments').then(response => {
+        this.treatments = response.body;
       },response => {
         //error
       })
+    },
+    postQuantities: function() {
+      this.$http.post('http://localhost:3000/quantities',{
+        weight: this.weight,
+        cost: this.cost,
+        product_id: this.product_id
+      }).then(response => {
+        this.alert_add_quantity = response.body;
+      },response => {
+        //error
+      });
+      this.product_id = '';
+      this.cost = '';
+      this.weight = '';
+      this.arlert_post_quantity = true;
+      var vm = this;
+      setTimeout(function(){ vm.arlert_post_quantity = false }, 3000);
+    },
+    postProductTreatmentPhase: function() {
+      this.$http.post('http://localhost:3000/product_treatment_phases',{
+        weight: 10000,
+        phase_id_previous: this.phase_id_previous,
+        phase_id: this.phase_id,
+        product_id: this.f_product_id,
+        product_treatments_attributes: this.product_treatments_attributes 
+      }).then(response => {
+        this.product_treatment_phase = response.body;
+      },response => {
+        this.error_product_treatment_phase = response;
+      });
+      this.product_id = '';
+      this.cost = '';
+      this.weight = '';
+      this.arlert_post_quantity = true;
+      var vm = this;
+      setTimeout(function(){ vm.arlert_post_quantity = false }, 3000);
+    },
+    getPhases: function() {
+      this.$http.get('http://localhost:3000/phases').then(response => {
+        this.phases = response.body;
+      },response => {
+        //error
+      })
+    },
+    addTreatment: function() {
+      this.count_treatment++;
+      this.addProductTreatmentsAttributes();
+    },
+    removeTreatment: function() {
+      if(this.count_treatment > 0) {
+        this.count_treatment--;
+      }  
+    },
+    addProductTreatmentsAttributes: function(){
+      this.product_treatments_attributes.push(
+        {
+          cost: null,
+          treatment_id: null,
+          treatment_new_name: null,
+          checkbox_treatment: false
+        } 
+      );
+      console.log('corriendo metodo addProductTreatmentsAttributes');
+    },
+    validate_product_treatments_attributes_id: function(index){
+      if(this.product_treatments_attributes[index].checkbox_treatment) {
+        this.product_treatments_attributes[index].treatment_id = null;
+      }
     }
   }
 }
+
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

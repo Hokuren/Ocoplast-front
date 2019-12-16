@@ -45,10 +45,10 @@
 
         <div>
         <h3>Prueba peticion ajax</h3> 
-        <div v-for="product in products" :key="product.id">
+        <!-- <div v-for="product in products" :key="product.id">
             <p>{{ product.name }}</p>
             <hr>
-        </div>
+        </div> -->
         </div>
 
 
@@ -101,6 +101,7 @@
     </div>
   </div>
 </div>
+
 </template>
 
 
