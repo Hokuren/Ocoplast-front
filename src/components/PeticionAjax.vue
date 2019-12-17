@@ -15,7 +15,7 @@
                 <div class="form-group row">
                     <label for="inputPassword3" class="col-sm-4 col-form-label">Fecha</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="inputPassword3">
+                        <input type="datetime" class="form-control" id="inputPassword3">
                     </div>
                 </div> 
                 <div class="form-group row">
@@ -97,11 +97,10 @@
                   <div class="form-group text-left">
                       <label for="formGroupExampleInput2">Tratamientos ({{ count_treatment }})</label>
                       <button type="submit" class="btn btn-success" @click="addTreatment"> + </button>
-                      <button type="submit" class="btn btn-danger" @click="removeTreatment"> - </button>
                       <br>
                       <br>
                       <div v-if="count_treatment > 0 ">
-                        <div v-for="(product_treatments_attribute in product_treatments_attributes" :key="product_treatments_attribute.id">
+                        <div v-for="(product_treatments_attribute, index) in product_treatments_attributes" :key="product_treatments_attribute.id">
                           <div class="card">
                             <div class="card-body text-left">
                             <div class="form-group text-left" >
@@ -118,13 +117,14 @@
                                 <p>
                                   <input type="checkbox" 
                                           v-model="product_treatments_attribute.checkbox_treatment"
-                                          @change="validate_product_treatments_attributes_id()">
-                                  Nuevo Tratamiento
+                                          @change="validate_product_treatments_attributes_id(index)">
+                                  Nuevo Tratamiento  || index {{ index }}
                                   <input type="text" v-if="product_treatments_attribute.checkbox_treatment" v-model="product_treatments_attribute.treatment_new_name" >
+                                  <button type="submit" class="btn btn-danger" @click="removeTreatment(index)"> - </button>
                                 </p>
                                </div>  
                               <label for="">Costo del Tratamiento</label>
-                              <input type="number" v-model="product_treatments_attribute.treatment_cost" required>
+                              <input type="number" v-model="product_treatments_attribute.cost" required>
                             </div>
                             </div>
                           </div>
@@ -140,6 +140,13 @@
                   </div>
 
               </form>  
+
+              <div class="alert alert-primary" role="alert" v-if="alert_post_product_treatment_phase">
+                  <br>
+                  <p v-if="product_treatment_phase.length > 0">Correcto: {{ product_treatment_phase }}</p>
+                  <br>
+                  <p  v-if="error_product_treatment_phase.length > 0">Incorrecto: {{ error_product_treatment_phase }}</p>
+              </div>
 
               <div>
                 <p>
@@ -169,6 +176,7 @@ export default {
   data () {
     return {
       arlert_post_quantity: false,
+      alert_post_product_treatment_phase: false,
       alert_add_quantity: [],
       quantity: [],
       products: [],
@@ -179,7 +187,7 @@ export default {
       f_product_id: '',
       phase_id_previous: '',
       phase_id: '',
-      weight_phase: '',
+      weight_phase: Number,
       count_treatment: 0,
       treatments: [],
       checkbox_treatment: false,
@@ -188,7 +196,7 @@ export default {
       treatment_new_name: null,
       treatment_cost: null,
       product_treatment_phase: [],
-      error_product_treatment_phase: ''
+      error_product_treatment_phase: []
     }
   },
   mounted () {
@@ -233,22 +241,25 @@ export default {
     },
     postProductTreatmentPhase: function() {
       this.$http.post('http://localhost:3000/product_treatment_phases',{
-        weight: 10000,
+        weight: Number(this.weight_phase),
         phase_id_previous: this.phase_id_previous,
         phase_id: this.phase_id,
         product_id: this.f_product_id,
+        product_treatment_phase_id: null,
         product_treatments_attributes: this.product_treatments_attributes 
       }).then(response => {
         this.product_treatment_phase = response.body;
       },response => {
         this.error_product_treatment_phase = response;
       });
-      this.product_id = '';
-      this.cost = '';
-      this.weight = '';
-      this.arlert_post_quantity = true;
-      var vm = this;
-      setTimeout(function(){ vm.arlert_post_quantity = false }, 3000);
+        this.weight_phase = ''
+        this.phase_id_previous = ''
+        this.phase_id = ''
+        this.f_product_id = ''
+        this.count_treatment = 0
+        this.product_treatments_attributes = []
+      var vmm = this;
+      setTimeout(function(){ vmm.alert_post_product_treatment_phase = false }, 3000);
     },
     getPhases: function() {
       this.$http.get('http://localhost:3000/phases').then(response => {
@@ -261,10 +272,11 @@ export default {
       this.count_treatment++;
       this.addProductTreatmentsAttributes();
     },
-    removeTreatment: function() {
-      if(this.count_treatment > 0) {
-        this.count_treatment--;
-      }  
+    removeTreatment: function(index) {
+      if (this.count_treatment > 0) {
+        this.count_treatment--; 
+      }
+      this.product_treatments_attributes.splice(index,1);
     },
     addProductTreatmentsAttributes: function(){
       this.product_treatments_attributes.push(
@@ -275,7 +287,6 @@ export default {
           checkbox_treatment: false
         } 
       );
-      console.log('corriendo metodo addProductTreatmentsAttributes');
     },
     validate_product_treatments_attributes_id: function(index){
       if(this.product_treatments_attributes[index].checkbox_treatment) {

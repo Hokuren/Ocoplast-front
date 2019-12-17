@@ -1,0 +1,49 @@
+//parametros de rails 
+Parameters: 
+{ 
+  "weight"=>1000,
+  "phase_id_previous"=>1,
+  "phase_id"=>2,
+  "product_id"=>1,
+  "product_treatment_phase_id"=>nil,
+  "product_treatments_attributes"=>
+    [
+      { 
+        "cost"=>10000,
+        "treatment_id"=>nil,
+        "treatment_new_name"=>"Picado"
+      },
+      {
+        "cost"=>12000,
+        "treatment_id"=>nil,
+        "treatment_new_name"=> "energia"
+      }, 
+      {
+        "cost"=>19000,
+        "treatment_id"=>nil,
+        "treatment_new_name"=>"Agua"
+      }
+    ], 
+    "product_treatment_phase"=>{"weight"=>1000, "phase_id"=>2, "product_treatment_phase_id"=>nil, "product_id"=>1, "product_treatments_attributes"=>[{"cost"=>10000, "treatment_id"=>nil, "treatment_new_name"=>"Picado"}, {"cost"=>12000, "treatment_id"=>nil, "treatment_new_name"=>"energia"}, {"cost"=>19000, "treatment_id"=>nil, "treatment_new_name"=>"Agua"}]}}
+
+/// VUE
+{ 
+  "weight"=>"1000",
+  "phase_id_previous"=>1,
+  "phase_id"=>2,
+  "product_id"=>1,
+  "product_treatment_phase_id"=>nil,
+  "product_treatments_attributes"=>
+    [
+      {
+        "cost"=>"15000",
+        "treatment_id"=>1,
+        "treatment_new_name"=>nil,
+        "checkbox_treatment"=>false
+      },
+      { 
+        "cost"=>"19000", "treatment_id"=>2, "treatment_new_name"=>nil, "checkbox_treatment"=>false}], "product_treatment_phase"=>{"weight"=>"1000", "phase_id"=>2, "product_treatment_phase_id"=>nil, "product_id"=>1, "product_treatments_attributes"=>[{"cost"=>"15000", "treatment_id"=>1, "treatment_new_name"=>nil, "checkbox_treatment"=>false}, {"cost"=>"19000", "treatment_id"=>2, "treatment_new_name"=>nil, "checkbox_treatment"=>false}]}}
+
+
+
+
