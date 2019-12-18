@@ -136,6 +136,7 @@
                   <div class="form-group row">
                       <div class="col-sm-10">
                           <button type="submit" class="btn btn-primary">Cambiar Fase</button>
+                          <button type="submit" class="btn btn-primary" @click="cambiarHoja">Cambiar de Hoja</button>
                       </div>
                   </div>
 
@@ -292,6 +293,9 @@ export default {
       if(this.product_treatments_attributes[index].checkbox_treatment) {
         this.product_treatments_attributes[index].treatment_id = null;
       }
+    },
+    cambiarHoja: function() {
+      this.$router.push({ name: 'Inventary'})
     }
   }
 }

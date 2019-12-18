@@ -11,6 +11,11 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'PeticionAjax',
+      component: PeticionAjax
+    },
+    {
+      path: '/Inventary',
       name: 'Inventary',
       component: Inventary
     }
