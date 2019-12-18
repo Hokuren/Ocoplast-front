@@ -1,6 +1,6 @@
 <template>
   <div id="Inventary">
-    <div class="container">
+    <!-- <div class="container">
       <div class="row">
         <div class="col-4">
           <form v-on:submit.prevent="post_phase_quantities">
@@ -30,36 +30,33 @@
         </form>  
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <!-- <table class="table">
+    <table class="table">
       <thead class="thead-dark">
         <tr>
-          <th scope="col">#</th>
-          <th scope="col" v-for="(phase_quantitie, index) in phase_quantities" :key="index">{{ phase_quantitie.phase.name }}</th>
+          <th scope="col">Producto</th>
+          <th scope="col" v-for="(phase, index) in phases" :key="index">{{ phase.name }}</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td v-for="(phase_quantitie, index) in phase_quantities" :key="index">{{ phase_quantitie.product.name }} || {{ phase_quantitie.cost }} || {{ phase_quantitie.weight }} || {{ phase_quantitie.phase.name }}</td>
+        <tr scope="row" v-for="(product, index) in products" :key="index">
+          <th>{{ product.name }}</th>
+          <td v-for="(phase, index) in phases" :key="index">
+          {{ mapArrayInventary(product.name,phase.id) }}</td>
+          <!-- <td v-for="(phase_quantitie, index) in phase_quantities" :key="index">{{ phase_quantitie.product.name }}</td> -->
         </tr>
       </tbody>
-    </table> -->
-
-    <table class="table">
-        <tr v-for="(phase_quantitie, index) in phase_quantities" :key="index">
-          <td v-for="(phase_quantitie, index) in phase_quantities" :key="index">{{ phase_quantitie.product.name }} || {{ phase_quantitie.cost }} || {{ phase_quantitie.weight }} || {{ phase_quantitie.phase.name }}</td>
-        </tr>
     </table>
 
-
-    <div>
+    <!-- <div>
       <h3>Parametros</h3>
       <p> phase_id: {{ phase_id }} </p>
       <p> product_id: {{ product_id }} </p>
       <p> phase_quantities: {{ phase_quantities }} </p>
-    </div>
+    </div> -->
+
+
 
   </div> 
 </template> 
@@ -80,6 +77,7 @@ export default {
   mounted () {
     this.getProducts();
     this.getPhases();
+    this.post_phase_quantities();
   },
   beforeUpdate () {
 
@@ -112,9 +110,26 @@ export default {
       this.phase_id =  null
       this.product_id = null
     }, 
-    detail_phase_quantities: function(){
-
-    }
+    mapArrayInventary: function(t_product_name,t_phase_id){
+      console.log("entro al metodo") 
+      var cost_phase = 0
+      var weight_phase = 0
+      var cost_total = 0
+      for(var phase_quantitie in this.phase_quantities) {
+        if (this.phase_quantities[phase_quantitie].products.product_name.includes(t_product_name)) {
+          for(var phase in this.phase_quantities[phase_quantitie].products.phases){
+            if(this.phase_quantities[phase_quantitie].products.phases[phase].phase_id === t_phase_id){
+              cost_phase = this.phase_quantities[phase_quantitie].products.phases[phase].cost
+              weight_phase = this.phase_quantities[phase_quantitie].products.phases[phase].weight
+              cost_total = (cost_phase * weight_phase)
+            }
+          } 
+        }
+      }
+      var text_r = "costo por K/G: " + cost_phase  + "\n peso: " + weight_phase  + "\n costo total: " + cost_total;
+      console.log(text_r);
+      return text_r;
+    }//closed methods
   }  
 }
 
@@ -123,6 +138,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+* {
+  margin-top: 0px;
+}
 h1, h2 {
   font-weight: normal;
 }

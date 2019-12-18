@@ -7,17 +7,24 @@
               <form v-on:submit.prevent="postQuantities" >
                 <div class="form-group row">
                 <label for="inputPassword3" class="col-sm-4 col-form-label">Producto</label>
-                <select class="col-sm-8" v-model="product_id">
+                <select class="col-sm-8" v-model="product_id" required>
                     <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                 </select> 
                 </div>  
-                
                 <div class="form-group row">
                     <label for="inputPassword3" class="col-sm-4 col-form-label">Fecha</label>
-                    <div class="col-sm-8">
-                        <input type="datetime" class="form-control" id="inputPassword3">
-                    </div>
+                    <date-picker class="col-sm-8" v-model="date" valueType="format" required></date-picker>
                 </div> 
+
+                <!-- Zona de Pruebas -->
+                    <!-- <div>
+                      <date-picker v-model="time1" valueType="format"></date-picker>
+                      <date-picker v-model="time2" type="datetime"></date-picker>
+                      <date-picker v-model="time3" range></date-picker>
+                    </div>
+              -->
+                <!-- Zona de Pruebas -->
+
                 <div class="form-group row">
                     <label for="inputPassword3" class="col-sm-4 col-form-label"> Cantidad </label>
                     <div class="col-sm-8">
@@ -51,6 +58,7 @@
               <p>{{ product_id }}</p>
               <p>{{ weight }}</p>
               <p>{{ cost }}</p>
+              <p>{{ date }}</p>
               <p>{{ arlert_post_quantity }}</p>
           </div>
 
@@ -59,7 +67,7 @@
               <form v-on:submit.prevent="postProductTreatmentPhase">
                   <div class="form-group text-left">
                     <label for="inputPassword3">Fase Anterior</label>
-                    <select class="col-sm-8" v-model="phase_id_previous">
+                    <select class="col-sm-8" v-model="phase_id_previous" required>
                         <option v-for="phase in phases" 
                                 :key="phase.id" 
                                 :value="phase.id"
@@ -68,7 +76,7 @@
                   </div>
                   <div class="form-group text-left">
                     <label for="inputPassword3">Producto</label>
-                    <select class="col-sm-8" v-model="f_product_id">
+                    <select class="col-sm-8" v-model="f_product_id" required>
                         <option v-for="product in products" 
                                 :key="product.id" 
                                 :value="product.id"
@@ -78,7 +86,7 @@
 
                   <div class="form-group text-left">
                     <label for="inputPassword3">Phase Actual</label>
-                    <select class="col-sm-8" v-model="phase_id">
+                    <select class="col-sm-8" v-model="phase_id" required>
                         <option v-for="phase in phases" 
                                 :key="phase.id" 
                                 :value="phase.id"
@@ -171,8 +179,11 @@
 </template> 
 
 <script>
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
 
 export default {
+  components: { DatePicker },
   name: 'PeticionAjax',
   data () {
     return {
@@ -182,6 +193,7 @@ export default {
       quantity: [],
       products: [],
       product_id: '',
+      date: '',
       cost: '',
       weight: '',
       phases: [],
@@ -227,7 +239,8 @@ export default {
       this.$http.post('http://localhost:3000/quantities',{
         weight: this.weight,
         cost: this.cost,
-        product_id: this.product_id
+        product_id: this.product_id,
+        date: this.date
       }).then(response => {
         this.alert_add_quantity = response.body;
       },response => {
@@ -236,6 +249,7 @@ export default {
       this.product_id = '';
       this.cost = '';
       this.weight = '';
+      this.date = '';
       this.arlert_post_quantity = true;
       var vm = this;
       setTimeout(function(){ vm.arlert_post_quantity = false }, 3000);
@@ -296,7 +310,8 @@ export default {
     },
     cambiarHoja: function() {
       this.$router.push({ name: 'Inventary'})
-    }
+    }   
+
   }
 }
 
@@ -305,6 +320,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+* {
+  margin-top: 10px;
+}
 h1, h2 {
   font-weight: normal;
 }
