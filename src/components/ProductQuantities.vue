@@ -44,13 +44,13 @@
 
         </div>   <!-- closed row -->
     </div> <!-- closed contairner -->
-
+<!-- 
     <div>
       <p>product_id: {{ product_id }}</p>
 	    <p>initial_date: {{ initial_date }}</p>
       <p>last_date: {{ last_date }}</p>
       <p>product_quantities: {{ product_quantities }}</p>
-    </div>
+    </div> -->
 
   </div> 
 </template> 

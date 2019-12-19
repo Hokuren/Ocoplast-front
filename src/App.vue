@@ -10,7 +10,13 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
+              <a class="nav-link" href="#" @click="rootNewProduct">Nuevo Producto <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
               <a class="nav-link" href="#" @click="rootProductTreatmentPhase">Cargar Fase <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="#" @click="rootClassification">Clasificación <span class="sr-only">(current)</span></a>
             </li>
             <!-- <li class="nav-item">
               <a class="nav-link" href="#" @click="rootInventary">otro </a>
@@ -23,17 +29,17 @@
                 <a class="dropdown-item" href="#" @click="rootInventary">Inventario General</a>
                 <a class="dropdown-item" href="#" @click="rootProductQuantities">Cantidades Compradas</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Inventario Pull</a>
+                <a class="dropdown-item" href="#" @click="rootPullQuantities">Inventario Pull</a>
               </div>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-            </li>
+            </li> -->
           </ul>
-          <form class="form-inline my-2 my-lg-0">
+          <!-- <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </form>
+          </form> -->
         </div>
       </nav>
 
@@ -54,6 +60,15 @@ export default {
     },
     rootProductQuantities: function() {
       this.$router.push({ name: 'ProductQuantities'})
+    },
+    rootPullQuantities: function() {
+      this.$router.push({ name: 'PullQuantities'})
+    },
+    rootClassification: function() {
+      this.$router.push({ name: 'Classification'})
+    },
+    rootNewProduct: function() {
+      this.$router.push({ name: 'NewProduct'})
     }
   }
 }

@@ -5,6 +5,9 @@ import Phases from '@/components/Phases'
 import PeticionAjax from '@/components/PeticionAjax'
 import Inventary from '@/components/Inventary'
 import ProductQuantities from '@/components/ProductQuantities'
+import PullQuantities from '@/components/PullQuantities'
+import Classification from '@/components/Classification'
+import NewProduct from '@/components/NewProduct'
 
 Vue.use(Router)
 
@@ -25,5 +28,20 @@ export default new Router({
       name: 'ProductQuantities',
       component: ProductQuantities
     },
+    {
+      path: '/PullQuantities',
+      name: 'PullQuantities',
+      component: PullQuantities
+    },
+    {
+      path: '/Classification',
+      name: 'Classification',
+      component: Classification
+    },
+    {
+      path: '/NewProduct',
+      name: 'NewProduct',
+      component: NewProduct
+    }
   ]
 })

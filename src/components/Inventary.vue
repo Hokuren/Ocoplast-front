@@ -41,7 +41,7 @@
       </thead>
       <tbody>
         <tr scope="row" v-for="(product, index) in products" :key="index">
-          <th>{{ product.name }}</th>
+          <th>{{ product.name }} (id: {{ product.id }})</th>
           <td v-for="(phase, index) in phases" :key="index">
           {{ mapArrayInventary(product.name,phase.id) }}</td>
           <!-- <td v-for="(phase_quantitie, index) in phase_quantities" :key="index">{{ phase_quantitie.product.name }}</td> -->

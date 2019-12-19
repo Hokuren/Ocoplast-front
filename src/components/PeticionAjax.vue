@@ -15,7 +15,6 @@
                     <label for="inputPassword3" class="col-sm-4 col-form-label">Fecha</label>
                     <date-picker class="col-sm-8" v-model="date" valueType="format" required></date-picker>
                 </div> 
-
                 <!-- Zona de Pruebas -->
                     <!-- <div>
                       <date-picker v-model="time1" valueType="format"></date-picker>
@@ -24,17 +23,16 @@
                     </div>
               -->
                 <!-- Zona de Pruebas -->
-
                 <div class="form-group row">
                     <label for="inputPassword3" class="col-sm-4 col-form-label"> Cantidad </label>
                     <div class="col-sm-8">
-                        <input type="Number" class="form-control" id="inputPassword3" v-model="weight" required>
+                        <input type="Number" class="form-control" min="1" pattern="^[0-9]+"  v-model.number="weight" required>
                     </div>
                 </div>       
                 <div class="form-group row">
                     <label for="inputPassword3" class="col-sm-4 col-form-label"> Costo </label>
                     <div class="col-sm-8">
-                        <input type="Number" class="form-control" id="inputPassword3" v-model="cost" required>
+                        <input type="Number" class="form-control" min="1" pattern="^[0-9]+" v-model.number="cost" required>
                     </div>
                 </div>
 
@@ -53,14 +51,14 @@
               Costo: {{ alert_add_quantity.cost }}
             </p>
           </div>
-          <div>
+          <!-- <div>
               <h6>Parametros</h6>
               <p>{{ product_id }}</p>
               <p>{{ weight }}</p>
               <p>{{ cost }}</p>
               <p>{{ date }}</p>
               <p>{{ arlert_post_quantity }}</p>
-          </div>
+          </div> -->
 
           </div>
           <div class="col-9">
@@ -95,11 +93,11 @@
                   </div>
                   <div class="form-group text-left">
                       <label for="formGroupExampleInput2">Peso en Kg</label>
-                      <input type="number" class="form-control" id="formGroupExampleInput5" placeholder="Peso en Kilos" v-model="weight_phase" required>
+                      <input type="number" class="form-control" min="1" pattern="^[0-9]+"  placeholder="Peso en Kilos" v-model="weight_phase" required>
                   </div>
                   <div class="form-group text-left">
                       <label for="formGroupExampleInput2">Precio por Kilo</label>
-                      <input type="number" class="form-control" id="formGroupExampleInput4" placeholder="0" disabled>
+                      <input type="number" class="form-control" min="1" pattern="^[0-9]+"  placeholder="0" disabled>
                   </div>
     
                   <div class="form-group text-left">
@@ -132,7 +130,7 @@
                                 </p>
                                </div>  
                               <label for="">Costo del Tratamiento</label>
-                              <input type="number" v-model="product_treatments_attribute.cost" required>
+                              <input type="number" min="1" pattern="^[0-9]+" v-model.number="product_treatments_attribute.cost" required>
                             </div>
                             </div>
                           </div>
@@ -144,7 +142,6 @@
                   <div class="form-group row">
                       <div class="col-sm-10">
                           <button type="submit" class="btn btn-primary">Cambiar Fase</button>
-                          <button type="submit" class="btn btn-primary" @click="cambiarHoja">Cambiar de Hoja</button>
                       </div>
                   </div>
 
