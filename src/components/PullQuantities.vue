@@ -2,7 +2,7 @@
   <div id="PullQuantities">
 
 
-    <h3>Pull Quantities</h3>
+    <h3>Pool Quantities</h3>
       <div class="container">
         <div class="row">
           <div class="col-3">

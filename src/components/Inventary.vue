@@ -43,7 +43,7 @@
         <tr scope="row" v-for="(product, index) in products" :key="index">
           <th>{{ product.name }} (id: {{ product.id }})</th>
           <td v-for="(phase, index) in phases" :key="index">
-          {{ mapArrayInventary(product.name,phase.id) }}</td>
+          {{ mapArrayInventary(product.id,phase.id) }}</td>
           <!-- <td v-for="(phase_quantitie, index) in phase_quantities" :key="index">{{ phase_quantitie.product.name }}</td> -->
         </tr>
       </tbody>
@@ -54,8 +54,8 @@
       <p> phase_id: {{ phase_id }} </p>
       <p> product_id: {{ product_id }} </p>
       <p> phase_quantities: {{ phase_quantities }} </p>
-    </div> -->
-
+    </div>
+ -->
 
 
   </div> 
@@ -110,15 +110,14 @@ export default {
       this.phase_id =  null
       this.product_id = null
     }, 
-    mapArrayInventary: function(t_product_name,t_phase_id){
-      console.log("entro al metodo") 
+    mapArrayInventary: function(f_product_id,f_phase_id){
       var cost_phase = 0
       var weight_phase = 0
       var cost_total = 0
       for(var phase_quantitie in this.phase_quantities) {
-        if (this.phase_quantities[phase_quantitie].products.product_name.includes(t_product_name)) {
+        if (this.phase_quantities[phase_quantitie].products.product_id === f_product_id) {
           for(var phase in this.phase_quantities[phase_quantitie].products.phases){
-            if(this.phase_quantities[phase_quantitie].products.phases[phase].phase_id === t_phase_id){
+            if(this.phase_quantities[phase_quantitie].products.phases[phase].phase_id === f_phase_id){
               cost_phase = this.phase_quantities[phase_quantitie].products.phases[phase].cost
               weight_phase = this.phase_quantities[phase_quantitie].products.phases[phase].weight
               cost_total = (cost_phase * weight_phase)
@@ -126,10 +125,11 @@ export default {
           } 
         }
       }
-      var text_r = "costo por K/G: " + cost_phase  + "\n peso: " + weight_phase  + "\n costo total: " + cost_total;
-      console.log(text_r);
+      var text_r =  "\n Peso: " + weight_phase  + " Costo por (K/G): " + cost_phase ;
+      //var text_r =  "\n Peso: " + weight_phase  + " Costo por K/G: " + cost_phase  + "\n Costo total: " + cost_total;
       return text_r;
     }//closed methods
+
   }  
 }
 

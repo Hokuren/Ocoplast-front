@@ -1,9 +1,0 @@
-Parameters: {"weight"=>8000, "phase_id_previous"=>1, "phase_id"=>2, "product_id"=>1, "product_treatment_phase_id"=>nil, "product_treatments_attributes"=>[{"cost"=>1000000, "treatment_id"=>4, "treatment_new_name"=>nil, "checkbox_treatment"=>false}, {"cost"=>1200000, "treatment_id"=>5, "treatment_new_name"=>nil, "checkbox_treatment"=>false}, {"cost"=>470000, "treatment_id"=>6, "treatment_new_name"=>nil, "checkbox_treatment"=>false}], "product_treatment_phase"=>{"weight"=>8000, "phase_id"=>2, "product_treatment_phase_id"=>nil, "product_id"=>1, "product_treatments_attributes"=>[{"cost"=>1000000, "treatment_id"=>4, "treatment_new_name"=>nil, "checkbox_treatment"=>false}, {"cost"=>1200000, "treatment_id"=>5, "treatment_new_name"=>nil, "checkbox_treatment"=>false}, {"cost"=>470000, "treatment_id"=>6, "treatment_new_name"=>nil, "checkbox_treatment"=>false}]}}
-
-
-
-
-Parameters: {"weight"=>5700, "phase_id_previous"=>1, "phase_id"=>2, "product_id"=>1, "product_treatment_phase_id"=>nil, "product_treatments_attributes"=>[{"cost"=>900000, "treatment_id"=>nil, "treatment_new_name"=>"Picado ", "checkbox_treatment"=>true}, {"cost"=>1200000, "treatment_id"=>nil, "treatment_new_name"=>"energia", "checkbox_treatment"=>true}, {"cost"=>450000, "treatment_id"=>nil, "treatment_new_name"=>"Agua", "checkbox_treatment"=>true}], "product_treatment_phase"=>{"weight"=>5700, "phase_id"=>2, "product_treatment_phase_id"=>nil, "product_id"=>1, "product_treatments_attributes"=>[{"cost"=>900000, "treatment_id"=>nil, "treatment_new_name"=>"Picado ", "checkbox_treatment"=>true}, {"cost"=>1200000, "treatment_id"=>nil, "treatment_new_name"=>"energia", "checkbox_treatment"=>true}, {"cost"=>450000, "treatment_id"=>nil, "treatment_new_name"=>"Agua", "checkbox_treatment"=>true}]}}
-
-  
-//postmam 

@@ -8,6 +8,7 @@ import ProductQuantities from '@/components/ProductQuantities'
 import PullQuantities from '@/components/PullQuantities'
 import Classification from '@/components/Classification'
 import NewProduct from '@/components/NewProduct'
+import AddQuantities from '@/components/AddQuantities'
 
 Vue.use(Router)
 
@@ -42,6 +43,11 @@ export default new Router({
       path: '/NewProduct',
       name: 'NewProduct',
       component: NewProduct
+    },
+    {
+      path: '/AddQuantities',
+      name: 'AddQuantities',
+      component: AddQuantities
     }
   ]
 })

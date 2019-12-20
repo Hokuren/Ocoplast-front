@@ -14,7 +14,7 @@
                 </div>  
                 <div class="form-group row">
                 <label for="inputPassword3" class="col-sm-4 col-form-label">Referencia de Producto</label>
-                <select class="col-sm-8" v-model="product_id" required>
+                <select class="col-sm-8" v-model="product_id" >
                     <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                 </select> 
                 </div>  

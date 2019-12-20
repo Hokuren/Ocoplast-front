@@ -35,12 +35,6 @@
             </div>
         
             <div class="form-group text-left">
-              <label for="formGroupExampleInput2">Clasificación ({{ count_classification }})</label>
-              <button type="submit" class="btn btn-success" @click="addClassification"> + </button>
-
-              <br>
-              <br>
-
               <div v-if="count_classification > 0 ">
                 <div v-for="(product_classificacion, index) in product_classificacions" :key="product_classificacion.id">
                   <div class="card">
@@ -75,6 +69,10 @@
                   <br>
                 </div>
               </div>
+              
+              <label for="formGroupExampleInput2">Clasificación ({{ count_classification }})</label>
+              <button type="submit" class="btn btn-success" @click="addClassification"> + </button>
+              <br>
 
             </div>
 
@@ -86,13 +84,12 @@
 
           </form>  
 
-          <div class="alert alert-primary" role="alert" v-if="alert_post_product_treatment_phase">
+          <div class="alert alert-primary" role="alert" v-if="alert_post_classification">
               <br>
-              <p v-if="product_treatment_phase.length > 0">Correcto: {{ product_treatment_phase }}</p>
+              <p>{{ product_treatment_phase }}</p>
               <br>
-              <p  v-if="error_product_treatment_phase.length > 0">Incorrecto: {{ error_product_treatment_phase }}</p>
           </div> 
-
+<!-- 
           <div>
             <h3>Parametros</h3>
             <p>Product_id: {{ product_id }}</p>
@@ -102,7 +99,7 @@
             <p>Fase anterior: {{ phase_id_previous }}</p>
             <p>Product classificacions: {{ product_classificacions }}</p>
             <p>product_treatment_phase: {{ product_treatment_phase }}</p>
-          </div>
+          </div> -->
 
         </div> <!-- Col 9-->
       </div> <!-- Closed row -->
