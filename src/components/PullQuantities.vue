@@ -2,55 +2,45 @@
   <div id="PullQuantities">
 
 
-    <h3>Pool Quantities</h3>
+    <h3>Reporte Pool de Producto</h3>
+  
       <div class="container">
         <div class="row">
-          <div class="col-3">
-              <form v-on:submit.prevent="postPullQuantities" >
-                <div class="form-group row">
-                <label for="inputPassword3" class="col-sm-4 col-form-label">Fase</label>
-                <select class="col-sm-8" v-model="phase_id" required>
-                    <option v-for="phase in phases" :key="phase.id" :value="phase.id">{{ phase.name }}</option>
-                </select> 
-                </div>  
-           
-                <div class="form-group row">
-                    <div class="col-sm-10">
-                        <button type="submit" class="btn btn-primary">Buscar</button>
-                    </div>
-                </div>
-              </form>
-          </div> 
+          <table class="table">
+            <thead class="thead-dark">
+              <tr scope="row">
+                <th scope="col" class="text-left">Pool</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr scope="row" v-for="(pull_quantitie, index) in pull_quantities" :key="index">
+                <th class="text-left">
+                  {{ pull_quantitie.product_name }}
+                  <hr>
+                  Peso: {{ pull_quantitie.weight }} Kg <br>
+                  Costo: {{ pull_quantitie.cost}} Kg <br>
+                  <p><b>Productos:</b></p>
+                  <ul>
+                      <li>
+                          <p v-for="(product, index) in pull_quantitie.products" :key="index">
+                            {{ product.product_name }} <br>
+                            Peso:  {{ product.weight }} Kg <br>
+                            Costo:  {{ product.cost}} Kg <br>
+                            
+                          </p>
+                      </li>
+                  </ul>
+                </th>
+              </tr>
+            </tbody>
+          </table>
+          
+          <!--<h3>Parametros</h3>
+          <br>
+          <p>
+            {{ pull_quantities }}
+          </p> -->
 
-          <div class="col-4" v-if="alert_pull_quantities">
-            <table class="table">
-              <thead class="thead-dark">
-                <tr>
-                  <th scope="col">Pull</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr scope="row" >
-                  <td v-for="(pull_quantities, index) in pull_quantities" :key="index">
-                    <h3>{{ pull_quantities.product.name }}</h3>
-                    <hr>
-                    <p>fase id: {{ pull_quantities.phase.phase_id }}
-                    <p>fase nombre: {{ pull_quantities.phase.name }}
-                    <p>Costo: {{ pull_quantities.group_by_product.cost }}
-                    <p>Peso: {{ pull_quantities.group_by_product.weight }}                       
-                    </p>
-                    <hr>
-                    <h5>Productos Ponderados</h5>
-                    <p v-for="(product, index) in pull_quantities.group_by_product.product_id" :key="index"> 
-                      Product_id: {{ product[index] }}
-                    </p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-     
         </div>   <!-- closed row -->
     </div> <!-- closed contairner -->
 <!-- 
@@ -78,23 +68,16 @@ export default {
     }
   },
   mounted () {
-    this.getPhases();
+    this.getPullQuantities();
   },
   beforeUpdate () {
 
   },
   methods: {
-    getPhases: function() {
-      this.$http.get('http://localhost:3000/phases').then(response => {
-        this.phases = response.body;
-      },response => {
-        //error
-      })
-    },
-    postPullQuantities: function(){
+    getPullQuantities: function(){
       var vm = this;
-      this.$http.post('http://localhost:3000/pull_quantities',{
-	      phase_id: this.phase_id
+      this.$http.get('http://localhost:3000/pull_quantities',{
+	      phase_id: Number(5)
       }).then(response => {
         vm.pull_quantities = response.body;
       },response =>{
@@ -103,6 +86,8 @@ export default {
       this.phase_id =  null
       this.alert_pull_quantities = true
     }, 
+
+
   } //closed methods
 }
 

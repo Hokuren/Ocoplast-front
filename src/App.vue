@@ -16,10 +16,10 @@
               <a class="nav-link" href="#" @click="rootAddQuantities">Agregar a Inventario <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="#" @click="rootProductTreatmentPhase">Cargar Fase <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="#" @click="rootProductTreatmentPhase">Procesar <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="#" @click="rootClassification">Clasificación <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="#" @click="rootClassification">Clasificar <span class="sr-only">(current)</span></a>
             </li>
             <!-- <li class="nav-item">
               <a class="nav-link" href="#" @click="rootInventary">otro </a>
@@ -29,10 +29,10 @@
               Reportes
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#" @click="rootInventary">Inventario General</a>
-                <a class="dropdown-item" href="#" @click="rootProductQuantities">Cantidades Compradas</a>
+                <a class="dropdown-item" href="#" @click="rootInventary">Reporte Producto en Fases</a>
+                <a class="dropdown-item" href="#" @click="rootProductQuantities">Reporte Producto en Bruto</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" @click="rootPullQuantities">Inventario Pool</a>
+                <a class="dropdown-item" href="#" @click="rootPullQuantities">Reporte Pool de Producto</a>
               </div>
             </li>
             <!-- <li class="nav-item">

@@ -3,11 +3,11 @@
 
       <div class="container">
         <div class="row">
-          <div class="col-3">
+          <div class="col-4">
               <form v-on:submit.prevent="postProductQuantities" >
                 <div class="form-group row">
                 <label for="inputPassword3" class="col-sm-4 col-form-label">Producto</label>
-                <select class="col-sm-8" v-model="product_id" required>
+                <select class="form-control col-sm-8" v-model="product_id" required>
                     <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                 </select> 
                 </div>  
@@ -27,7 +27,8 @@
               </form>
           </div> 
 
-          <div class="col-9" v-if="card_invetary_product">
+
+          <div class="col-4" v-if="card_invetary_product">
 
             <div class="card" style="width: 18rem;">
               <div class="card-body">
@@ -36,21 +37,54 @@
               </div>
               <ul class="list-group list-group-flush">
                 <li class="list-group-item">Product_id: {{ product_quantities.product_id }}</li>
-                <li class="list-group-item">Peso en K/G: {{ product_quantities.weight }}</li>
+                <li class="list-group-item">Peso en Kg: {{ product_quantities.weight }}</li>
                 <li class="list-group-item">Costo Total: {{ product_quantities.cost }}</li>
+                <li class="list-group-item">
+                  <button type="submit" class="btn btn-primary" @click="postProductQuantitiesDetail" formmethod="post">Detalle</button>
+                </li>
               </ul>
             </div>
           </div>
 
-        </div>   <!-- closed row -->
+          <div class="col-4" >
+            <table class="table">
+            <!-- <thead class="thead-dark">
+                <tr>
+                  <th scope="col" class="text-left">Producto</th>
+                  <th scope="col" v-for="(phase, index) in phases" :key="index" class="text-left">{{ phase.name }}</th>
+                </tr>
+              </thead> -->
+              <tbody>
+                <tr scope="row" v-for="(product_detail, index) in product_quantities_detail" :key="index">
+                  <th class="text-left">
+                    Costo: {{ product_detail.cost }}  (Kg) <br>
+                    Peso Inicial: {{ product_detail.weight_initial }} (Kg) <br>
+                    Peso: {{ product_detail.weight }} (Kg) <br> 
+                    Fecha: {{ product_detail.date }}     
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+
+      </div>   <!-- closed row -->
     </div> <!-- closed contairner -->
-<!-- 
+
+
+    <!--
     <div>
       <p>product_id: {{ product_id }}</p>
 	    <p>initial_date: {{ initial_date }}</p>
       <p>last_date: {{ last_date }}</p>
       <p>product_quantities: {{ product_quantities }}</p>
-    </div> -->
+      <div>
+        Detail : {{ product_quantities_detail }}
+      </div>
+    </div>
+    -->
+
+  
 
   </div> 
 </template> 
@@ -71,6 +105,7 @@ export default {
       last_date: '',
       products: [],
       product_quantities:[],
+      product_quantities_detail: [],
       card_invetary_product: false
     }
   },
@@ -99,13 +134,24 @@ export default {
       },response => {
         //error
       });
-      this.product_id = '';
-      this.initial_date = '';
-      this.last_date = '';
       this.card_invetary_product =  true;
       var vm = this;
-      setTimeout(function(){ vm.card_invetary_product = false }, 3000);
-    } 
+
+    },
+    postProductQuantitiesDetail: function(){
+      console.log('ingreso al post Detail');
+      console.log(Number(this.product_id), this.initial_date,  this.last_date)
+      this.$http.post('http://localhost:3000/product_quantities/detail',{
+        id: Number(this.product_id),
+        initial_date: this.initial_date,
+        last_date: this.last_date,
+      }).then(response => {
+        this.product_quantities_detail = response.body
+      },response => {
+        //error
+      });
+    },
+
 
   }
 }

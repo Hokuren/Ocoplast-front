@@ -8,7 +8,7 @@
           <form v-on:submit.prevent="postProductTreatmentPhaseClassification">
             <div class="form-group text-left">
               <label for="inputPassword3">Producto</label>
-              <select class="col-sm-8" v-model="product_id" required>
+              <select class="form-control" v-model="product_id" required>
                   <option v-for="product in products" 
                           :key="product.id" 
                           :value="product.id"
@@ -16,14 +16,15 @@
               </select> 
             </div>
             <div class="form-group text-left">
-              <label for="formGroupExampleInput2">Peso a Clasificar (Kg)</label>
-              <input type="number" class="form-control" min="1" pattern="^[0-9]+" placeholder="Peso en Kilos" v-model="weight_classification" required>
-            </div>
-            <div class="form-group text-left">
-              <label for="inputPassword3">Fase Anterior</label>
-              <select class="col-sm-8" v-model="phase_id_previous" required>
+              <label for="inputPassword3">Fase de Origen</label>
+              <select class="form-control" v-model="phase_id_previous" required>
                   <option :value="phases[0].id" class="form-control">{{ phases[0].name }}</option>
               </select> 
+            </div>
+            <div class="form-group text-left">
+              <label for="formGroupExampleInput2">Peso a Clasificar (Kg)</label>
+              <!--<input type="number" class="form-control" min="1" pattern="^[0-9]+" placeholder="Peso en Kilos" v-model="weight_classification" required>-->
+              <vue-numeric  class="form-control"  separator="." v-model="weight_classification" required placeholder="Peso en Kilos"></vue-numeric>
             </div>
             <div class="form-group text-left">
               <label for="formGroupExampleInput2">Nombre del Tratamiento</label>
@@ -31,7 +32,9 @@
             </div>
             <div class="form-group text-left">
               <label for="formGroupExampleInput2">Costo Clasificación</label>
-              <input type="number" class="form-control" min="1" pattern="^[0-9]+" placeholder="Peso en Kilos" v-model="cost_classification" required>
+              <!--<input type="number" class="form-control" min="0" pattern="^[0-9]+" placeholder="Peso en Kilos" v-model="cost_classification" required>-->
+              <vue-numeric  class="form-control" currency="$" separator="." v-model="cost_classification" required placeholder="Costo Clasificacion"></vue-numeric>
+                  
             </div>
         
             <div class="form-group text-left">
@@ -41,11 +44,13 @@
                     <div class="card-body text-left">
                       <div class="form-group text-left" >
                         <label for="">Cantidad a Clasificar</label>
-                        <input type="number" min="1" pattern="^[0-9]+" v-model.number="product_classificacion.weight" required>
+                        <!--<input type="number" min="1" pattern="^[0-9]+" v-model.number="product_classificacion.weight" required> -->
+                        <vue-numeric  class="form-control" separator="." v-model="product_classificacion.weight" required placeholder="Cantidad a Clasificar"></vue-numeric>
+                
                         <button type="submit" class="btn btn-danger" @click="removeClassificacion(index)"> - </button>
                         <br>
-                        <label for="">Producto</label>
-                        <select class="col-sm-8" v-model="product_classificacion.product_id">
+                        <label for="">Producto a Clasificar</label>
+                        <select class="form-control" v-model="product_classificacion.product_id">
                           <option v-for="product in products" 
                           :key="product.id" 
                           :value="product.id"
@@ -54,8 +59,8 @@
                           required >{{ product.name }}</option>
                         </select> 
                         <br>
-                        <label for="">Fase</label>
-                        <select class="col-sm-8"  v-model="product_classificacion.phase_id">
+                        <label for="">Fase de Destino</label>
+                        <select class="form-control"  v-model="product_classificacion.phase_id">
                           <option v-for="phase in phases" 
                           :key="phase.id" 
                           :value="phase.id"
@@ -85,9 +90,9 @@
           </form>  
 
           <div class="alert alert-primary" role="alert" v-if="alert_post_classification">
-              <br>
-              <p>{{ product_treatment_phase }}</p>
-              <br>
+              <p>Notificación</p>
+              <p>Peso: {{ product_treatment_phase.weight }}  Kg</p>
+              <p>Costo: {{ product_treatment_phase.cost }}  Kg</p>
           </div> 
 <!-- 
           <div>
@@ -110,7 +115,15 @@
 
 <script>
 
+import Vue from 'vue';
+import VueNumeric from 'vue-numeric';
+
+Vue.use(VueNumeric);
+
 export default {
+   components: { 
+    VueNumeric,
+  },
   name: 'Classification',
   data () {
     return {
@@ -140,6 +153,7 @@ export default {
     getPhases: function() {
       this.$http.get('http://localhost:3000/phases').then(response => {
         this.phases = response.body;
+        this.phases.splice( this.phases.indexOf('Pool'), 1 );
       },response => {
         //error
       })

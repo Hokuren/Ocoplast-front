@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "vue": "^2.5.2",
+    "vue-num-input": "^1.0.1",
+    "vue-numeric": "^2.3.0",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.1",
     "vue2-datepicker": "^3.3.0"

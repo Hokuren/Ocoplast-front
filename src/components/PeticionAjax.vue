@@ -3,62 +3,12 @@
 
       <div class="container">
         <div class="row">
-
-          <!-- <div class="col-3">
-              <form v-on:submit.prevent="postQuantities" >
-                <div class="form-group row">
-                <label for="inputPassword3" class="col-sm-4 col-form-label">Producto</label>
-                <select class="col-sm-8" v-model="product_id" required>
-                    <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
-                </select> 
-                </div>  
-                <div class="form-group row">
-                    <label for="inputPassword3" class="col-sm-4 col-form-label">Fecha</label>
-                    <date-picker class="col-sm-8" v-model="date" valueType="format" required></date-picker>
-                </div> 
-                <div class="form-group row">
-                    <label for="inputPassword3" class="col-sm-4 col-form-label"> Cantidad </label>
-                    <div class="col-sm-8">
-                        <input type="Number" class="form-control" min="1" pattern="^[0-9]+"  v-model.number="weight" required>
-                    </div>
-                </div>       
-                <div class="form-group row">
-                    <label for="inputPassword3" class="col-sm-4 col-form-label"> Costo Total</label>
-                    <div class="col-sm-8">
-                        <input type="Number" class="form-control" min="1" pattern="^[0-9]+" v-model.number="cost" required>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-sm-10">
-                        <button type="submit" class="btn btn-primary">Añadir Cantidad</button>
-                    </div>
-                </div>
-              </form> 
-
-          <div class="alert alert-primary" role="alert" v-if="arlert_post_quantity">
-            <p>Cantidad Añadida con exito: 
-              <br>
-              peso: {{ alert_add_quantity.weight }}
-              <br>
-              Costo: {{ alert_add_quantity.cost }}
-            </p>
-          </div>
-          <!-- <div>
-              <h6>Parametros</h6>
-              <p>{{ product_id }}</p>
-              <p>{{ weight }}</p>
-              <p>{{ cost }}</p>
-              <p>{{ date }}</p>
-              <p>{{ arlert_post_quantity }}</p>
-          </div> -->
-          </div> -->
-
+          
           <div class="col-9">
               <form v-on:submit.prevent="postProductTreatmentPhase">
                   <div class="form-group text-left">
                     <label for="inputPassword3">Producto</label>
-                    <select class="col-sm-8" v-model="f_product_id" required>
+                    <select class="col-sm-8 form-control" v-model="f_product_id" required>
                         <option v-for="product in products" 
                                 :key="product.id" 
                                 :value="product.id"
@@ -67,7 +17,7 @@
                   </div>
                   <div class="form-group text-left">
                     <label for="inputPassword3">Fase de Origen</label>
-                    <select class="col-sm-8" v-model="phase_id_previous" required>
+                    <select class="col-sm-8 form-control" v-model="phase_id_previous" required>
                         <option v-for="phase in phases" 
                                 :key="phase.id" 
                                 :value="phase.id"
@@ -76,7 +26,7 @@
                   </div>
                   <div class="form-group text-left">
                     <label for="inputPassword3">Fase de Destino</label>
-                    <select class="col-sm-8" v-model="phase_id" required>
+                    <select class="col-sm-8 form-control" v-model="phase_id" required>
                         <option v-for="phase in phases" 
                                 :key="phase.id" 
                                 :value="phase.id"
@@ -85,7 +35,8 @@
                   </div>
                   <div class="form-group text-left">
                       <label for="formGroupExampleInput2">Peso en Kg</label>
-                      <input type="number" class="form-control" min="1" pattern="^[0-9]+"  placeholder="Peso en Kilos" v-model="weight_phase" required>
+                      <!--<input type="number" class="form-control" min="1" pattern="^[0-9]+"  placeholder="Peso en Kilos" v-model="weight_phase" required>-->
+                      <vue-numeric  class="form-control col-sm-8"  separator="." v-model="weight_phase" required placeholder="Peso en Kilos" ></vue-numeric>
                   </div>
                   <!-- <div class="form-group text-left">
                       <label for="formGroupExampleInput2">Precio por Kilo</label>
@@ -97,7 +48,7 @@
                       <br>
                       <div v-if="count_treatment > 0 ">
                         <div v-for="(product_treatments_attribute, index) in product_treatments_attributes" :key="product_treatments_attribute.id">
-                          <div class="card">
+                          <div class="card col-sm-8">
                             <div class="card-body text-left">
                             <div class="form-group text-left" >
                               <label for="">Nombre del Tratamiento</label>
@@ -105,7 +56,7 @@
                                   <option v-for="treatment in treatments" 
                                   :key="treatment.id" 
                                   :value="treatment.id"
-                                  class="form-control"
+                                  class="form-control col-sm-6"
                                   v-model="treatment_id"
                                   >{{ treatment.name }}</option>
                                 </select> 
@@ -115,12 +66,13 @@
                                           v-model="product_treatments_attribute.checkbox_treatment"
                                           @change="validate_product_treatments_attributes_id(index)">
                                   Nuevo Tratamiento
-                                  <input type="text" v-if="product_treatments_attribute.checkbox_treatment" v-model="product_treatments_attribute.treatment_new_name" >
+                                  <input  class="col-sm-6" type="text" v-if="product_treatments_attribute.checkbox_treatment" v-model="product_treatments_attribute.treatment_new_name" >
                                   <button type="submit" class="btn btn-danger" @click="removeTreatment(index)"> - </button>
                                 </p>
                                </div>  
                               <label for="">Costo del Tratamiento</label>
-                              <input type="number" min="1" pattern="^[0-9]+" v-model.number="product_treatments_attribute.cost" required>
+                              <!--<input type="number" min="1" pattern="^[0-9]+" v-model.number="product_treatments_attribute.cost" required>-->
+                              <vue-numeric  class="form-control col-sm-6" currency="$" separator="." v-model="product_treatments_attribute.cost" required placeholder="Costo del Tratamiento" ></vue-numeric>
                             </div>
                             </div>
                           </div>
@@ -135,7 +87,7 @@
 
                   <div class="form-group row">
                       <div class="col-sm-10">
-                          <button type="submit" class="btn btn-primary">Cambiar Fase</button>
+                          <button type="submit" class="btn btn-primary">Procesar</button>
                       </div>
                   </div>
 
@@ -143,7 +95,8 @@
 
               <div class="alert alert-primary" role="alert" v-if="alert_post_product_treatment_phase">
                 <p>Notificación</p>
-                <p>{{ product_treatment_phase }}</p>
+                <p>Peso: {{ product_treatment_phase.weight }}  Kg</p>
+                <p>Costo: {{ product_treatment_phase.cost }}  Kg</p>
               </div>
 <!-- 
               <div>
@@ -170,9 +123,16 @@
 <script>
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
+import Vue from 'vue';
+import VueNumeric from 'vue-numeric';
+
+Vue.use(VueNumeric);
 
 export default {
-  components: { DatePicker },
+  components: { 
+    DatePicker,
+    VueNumeric,
+  },
   name: 'PeticionAjax',
   data () {
     return {
@@ -244,6 +204,7 @@ export default {
       setTimeout(function(){ vm.arlert_post_quantity = false }, 3000);
     },
     postProductTreatmentPhase: function() {
+      var vmm = this;
       this.$http.post('http://localhost:3000/product_treatment_phases',{
         weight: Number(this.weight_phase),
         phase_id_previous: this.phase_id_previous,
@@ -253,9 +214,6 @@ export default {
         product_treatments_attributes: this.product_treatments_attributes 
       }).then(response => {
         this.product_treatment_phase = response.body;
-      },response => {
-        this.error_product_treatment_phase = response;
-      });
         this.weight_phase = ''
         this.phase_id_previous = ''
         this.phase_id = ''
@@ -263,12 +221,17 @@ export default {
         this.count_treatment = 0
         this.product_treatments_attributes = []
         this.alert_post_product_treatment_phase = true 
-      var vmm = this;
-      setTimeout(function(){ vmm.alert_post_product_treatment_phase = false }, 3000);
+        setTimeout(function(){ vmm.alert_post_product_treatment_phase = false }, 3000);
+      },response => {
+        this.error_product_treatment_phase = response;
+      });
+
+  
     },
     getPhases: function() {
       this.$http.get('http://localhost:3000/phases').then(response => {
         this.phases = response.body;
+        this.phases.splice( this.phases.indexOf('Pool'), 1 );
       },response => {
         //error
       })

@@ -1,50 +1,19 @@
 <template>
   <div id="Inventary">
-    <!-- <div class="container">
-      <div class="row">
-        <div class="col-4">
-          <form v-on:submit.prevent="post_phase_quantities">
-            <div class="form-group text-left">
-              <label for="inputPassword3">Fase Anterior</label>
-              <select class="col-sm-8" v-model="phase_id">
-                  <option v-for="phase in phases" 
-                          :key="phase.id" 
-                          :value="phase.id"
-                          class="form-control">{{ phase.name }}</option>
-              </select> 
-            </div>
-            <div class="form-group text-left">
-              <label for="inputPassword3">Producto</label>
-              <select class="col-sm-8" v-model="product_id">
-                  <option v-for="product in products" 
-                          :key="product.id" 
-                          :value="product.id"
-                          class="form-control">{{ product.name }}</option>
-              </select> 
-            </div>
-            <div class="form-group row">
-                <div class="col-sm-10">
-                    <button type="submit" class="btn btn-primary">Buscar</button>
-                </div>
-            </div>
-        </form>  
-        </div>
-      </div>
-    </div> -->
-
     <table class="table">
       <thead class="thead-dark">
         <tr>
-          <th scope="col">Producto</th>
-          <th scope="col" v-for="(phase, index) in phases" :key="index">{{ phase.name }}</th>
+          <th scope="col" class="text-left">Producto</th>
+          <th scope="col" v-for="(phase, index) in phases" :key="index" class="text-left">{{ phase.name }}</th>
         </tr>
       </thead>
       <tbody>
         <tr scope="row" v-for="(product, index) in products" :key="index">
-          <th>{{ product.name }} (id: {{ product.id }})</th>
+          <th class="text-left">{{ product.name }} </th>
           <td v-for="(phase, index) in phases" :key="index">
-          {{ mapArrayInventary(product.id,phase.id) }}</td>
-          <!-- <td v-for="(phase_quantitie, index) in phase_quantities" :key="index">{{ phase_quantitie.product.name }}</td> -->
+            <p class="text-left">Peso: {{ mapArrayInventaryWeight(product.id,phase.id) }} (Kg)<br>
+            Costo: {{ mapArrayInventaryCost(product.id,phase.id) }} (Kg)</p>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -93,6 +62,7 @@ export default {
     getPhases: function() {
       this.$http.get('http://localhost:3000/phases').then(response => {
         this.phases = response.body;
+        this.phases.splice( this.phases.indexOf('Pool'), 1 );
       },response => {
         //error
       })
@@ -110,7 +80,24 @@ export default {
       this.phase_id =  null
       this.product_id = null
     }, 
-    mapArrayInventary: function(f_product_id,f_phase_id){
+    mapArrayInventaryWeight: function(f_product_id,f_phase_id){
+      var cost_phase = 0
+      var weight_phase = 0
+      var cost_total = 0
+      for(var phase_quantitie in this.phase_quantities) {
+        if (this.phase_quantities[phase_quantitie].products.product_id === f_product_id) {
+          for(var phase in this.phase_quantities[phase_quantitie].products.phases){
+            if(this.phase_quantities[phase_quantitie].products.phases[phase].phase_id === f_phase_id){
+              cost_phase = this.phase_quantities[phase_quantitie].products.phases[phase].cost
+              weight_phase = this.phase_quantities[phase_quantitie].products.phases[phase].weight
+              cost_total = (cost_phase * weight_phase)
+            }
+          } 
+        }
+      } 
+      return weight_phase;
+    },
+    mapArrayInventaryCost: function(f_product_id,f_phase_id){
       var cost_phase = 0
       var weight_phase = 0
       var cost_total = 0
@@ -125,12 +112,11 @@ export default {
           } 
         }
       }
-      var text_r =  "\n Peso: " + weight_phase  + " Costo por (K/G): " + cost_phase ;
-      //var text_r =  "\n Peso: " + weight_phase  + " Costo por K/G: " + cost_phase  + "\n Costo total: " + cost_total;
-      return text_r;
-    }//closed methods
+      return cost_phase;
+    }
+    
 
-  }  
+  }  //closed methods
 }
 
 

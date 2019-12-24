@@ -6,25 +6,28 @@
           <div class="col-3">
             <form v-on:submit.prevent="postQuantities" >
               <div class="form-group row">
-              <label for="inputPassword3" class="col-sm-4 col-form-label">Producto</label>
-              <select class="col-sm-8" v-model="product_id" required>
+              <label for="inputPassword3" class="col-sm-4 col-form-label ">Producto</label>
+              <select class="col-sm-8 text-left form-control" v-model="product_id" required>
                   <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
               </select> 
               </div>  
               <div class="form-group row">
-                  <label for="inputPassword3" class="col-sm-4 col-form-label">Fecha</label>
-                  <date-picker class="col-sm-8" v-model="date" valueType="format" required></date-picker>
+                  <label for="inputPassword3" class="col-sm-4 col-form-label text-left">Fecha</label>
+                  <date-picker class="col-sm-8 " v-model="date" valueType="format"  required></date-picker>
               </div> 
               <div class="form-group row">
-                  <label for="inputPassword3" class="col-sm-4 col-form-label"> Cantidad </label>
+                  <label for="inputPassword3" 
+                  class="col-sm-4 col-form-label text-left"> Cantidad </label>
                   <div class="col-sm-8">
-                      <input type="Number" class="form-control" min="1" pattern="^[0-9]+"  v-model.number="weight" required>
+                      <!--<input type="Number" class="form-control" min="1" pattern="^[0-9]+"  v-model.number="weight" required>-->
+                      <vue-numeric  class="form-control"  separator="." v-model="weight" required></vue-numeric>
                   </div>
               </div>       
               <div class="form-group row">
-                  <label for="inputPassword3" class="col-sm-4 col-form-label"> Costo Total</label>
+                  <label for="inputPassword3" class="col-sm-4 col-form-label text-left"> Costo Total</label>
                   <div class="col-sm-8">
-                      <input type="Number" class="form-control" min="1" pattern="^[0-9]+" v-model.number="cost" required>
+                      <!--<input type="Number" class="form-control" min="1" pattern="^[0-9]+" v-model.number="cost" required>-->
+                      <vue-numeric  class="form-control" currency="$" separator="." v-model="cost" required></vue-numeric>
                   </div>
               </div>
 
@@ -42,6 +45,14 @@
                 Costo: {{ alert_add_quantity.cost }}
               </p>
             </div>
+            
+            <!--
+            <div>
+              <h3>Parametros</h3>     
+              <p>Date {{ date }}</p>
+            </div>
+            -->
+
           </div>
         </div>
       </div>
@@ -52,9 +63,16 @@
 <script>
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
+import Vue from 'vue';
+import VueNumeric from 'vue-numeric';
+
+Vue.use(VueNumeric);
 
 export default {
-  components: { DatePicker },
+  components: { 
+    DatePicker,
+    VueNumeric,
+  },
   name: 'AddQuantities',
   data () {
     return {
@@ -87,6 +105,7 @@ export default {
     this.getProducts();
     this.getPhases();
     this.getTreatments();
+    this.currentDate();
   },
   beforeUpdate () {
 
@@ -180,9 +199,17 @@ export default {
         this.product_treatments_attributes[index].treatment_id = null;
       }
     },
-    cambiarHoja: function() {
-      this.$router.push({ name: 'Inventary'})
-    }   
+     format: function(input) {
+        var num = input.value.replace(/\./g,"");
+        if(!isNaN(num)){
+        num = num.toString().split("").reverse().join("").replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+        num = num.split("").reverse().join("").replace(/^[\.]/, "");
+        input.value = num;
+      }
+      else{ alert("Solo se permiten numeros");
+        input.value = input.value.replace(/[^\d\.]*/g,"");
+      }
+    }
 
   }
 }

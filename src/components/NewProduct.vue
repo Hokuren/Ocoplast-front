@@ -3,18 +3,18 @@
 
       <div class="container">
         <div class="row">
-          <div class="col-8">
+          <div class="col-4">
               <form v-on:submit.prevent="postProduct" >
 
                 <div class="form-group row">
-                <label for="inputPassword3" class="col-sm-4 col-form-label"> Producto Nuevo </label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" v-model="name_product" required>
+                <label for="inputPassword3" class="col-sm-4 col-form-label text-left"> Producto Nuevo </label>
+                <div >
+                    <input type="text" class="form-control" v-model="name_product" required >
                 </div>
                 </div>  
                 <div class="form-group row">
-                <label for="inputPassword3" class="col-sm-4 col-form-label">Referencia de Producto</label>
-                <select class="col-sm-8" v-model="product_id" >
+                <label for="inputPassword3" class="col-sm-4 col-form-label text-left">Referencia de Producto</label>
+                <select class="col-sm-8 input_width form-control"  v-model="product_id" >
                     <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                 </select> 
                 </div>  
@@ -26,8 +26,9 @@
               </form> 
 
               <div class="alert alert-primary" role="alert" v-if="arlert_create_product">
-                <p>Notificacion: 
-                  {{ post_product }}
+                <h3>Producto Creado:</h3> 
+                <p>ID: {{ post_product.id }} <br>
+                  Nombre de Producto {{ post_product.name }} 
                 </p>
               </div>
        
@@ -106,6 +107,7 @@ export default {
       setTimeout(function(){ vm.arlert_create_product = false }, 3000);
     }
 
+
   }
 }
 
@@ -130,5 +132,8 @@ li {
 }
 a {
   color: #42b983;
+}
+.input_width{
+  width: 100%;
 }
 </style>
