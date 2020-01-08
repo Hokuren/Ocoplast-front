@@ -19,15 +19,15 @@
                   <label for="inputPassword3" 
                   class="col-sm-4 col-form-label text-left"> Cantidad </label>
                   <div class="col-sm-8">
-                      <!--<input type="Number" class="form-control" min="1" pattern="^[0-9]+"  v-model.number="weight" required>-->
-                      <vue-numeric  class="form-control"  separator="." v-model="weight" required></vue-numeric>
+                      <input  class="form-control"  min="0" pattern="^[0-9].+" @input="dotFilter()" v-model="weight" required>
+                      <!-- <vue-numeric  class="form-control"  separator="." @input="dotFilter()" v-model="weight" required></vue-numeric> -->
                   </div>
               </div>       
               <div class="form-group row">
                   <label for="inputPassword3" class="col-sm-4 col-form-label text-left"> Costo Total</label>
                   <div class="col-sm-8">
-                      <!--<input type="Number" class="form-control" min="1" pattern="^[0-9]+" v-model.number="cost" required>-->
-                      <vue-numeric  class="form-control" currency="$" separator="." v-model="cost" required></vue-numeric>
+                      <input  class="form-control" min="0" pattern="^[0-9].+"  @input="dotFilterCost()" v-model="cost" required>
+                      <!-- <vue-numeric  class="form-control" currency="$" separator="." v-model="cost" required></vue-numeric> -->
                   </div>
               </div>
 
@@ -110,7 +110,30 @@ export default {
   beforeUpdate () {
 
   },
+ 
   methods: {
+     dotFilter(){
+      var value = String(this.weight.replace(/[.']/g,''));
+      var finalValue = value.replace(/[.']/g,'');
+      if(value.length >= 7){
+          finalValue=value.substring(0,value.length-6)+"'"+value.substring(value.length-6,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+        else if(value.length >= 4){
+          finalValue=value.substring(0,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+        this.weight = finalValue;
+    },
+    dotFilterCost(){
+      var value = String(this.cost.replace(/[.']/g,''));
+      var finalValue = value.replace(/[.']/g,'');
+      if(value.length >= 7){
+          finalValue=value.substring(0,value.length-6)+"'"+value.substring(value.length-6,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+        else if(value.length >= 4){
+          finalValue=value.substring(0,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+        this.cost = finalValue;
+    },
     getProducts: function() {
       this.$http.get('http://localhost:3000/products').then(response => {
         this.products = response.body;
@@ -127,8 +150,8 @@ export default {
     },
     postQuantities: function() {
       this.$http.post('http://localhost:3000/quantities',{
-        weight: this.weight,
-        cost: this.cost,
+        weight: Number(this.weight.replace(/[.']/g,'')),
+        cost: Number(this.cost.replace(/[.']/g,'')),
         product_id: this.product_id,
         date: this.date
       }).then(response => {
@@ -199,7 +222,7 @@ export default {
         this.product_treatments_attributes[index].treatment_id = null;
       }
     },
-     format: function(input) {
+    format: function(input) {
         var num = input.value.replace(/\./g,"");
         if(!isNaN(num)){
         num = num.toString().split("").reverse().join("").replace(/(?=\d*\.?)(\d{3})/g,'$1.');
@@ -214,6 +237,7 @@ export default {
   }
 }
 
+//  http://localhost:3000
 
 </script>
 

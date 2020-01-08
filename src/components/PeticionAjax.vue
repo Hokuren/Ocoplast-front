@@ -35,8 +35,8 @@
                   </div>
                   <div class="form-group text-left">
                       <label for="formGroupExampleInput2">Peso en Kg</label>
-                      <!--<input type="number" class="form-control" min="1" pattern="^[0-9]+"  placeholder="Peso en Kilos" v-model="weight_phase" required>-->
-                      <vue-numeric  class="form-control col-sm-8"  separator="." v-model="weight_phase" required placeholder="Peso en Kilos" ></vue-numeric>
+                      <input class="form-control col-sm-8" min="0" pattern="^[0-9].+" @input="dotFilterWeightPhase()" v-model="weight_phase" required>
+                      <!-- <vue-numeric  class="form-control col-sm-8"  separator="." v-model="weight_phase" required placeholder="Peso en Kilos" ></vue-numeric> -->
                   </div>
                   <!-- <div class="form-group text-left">
                       <label for="formGroupExampleInput2">Precio por Kilo</label>
@@ -71,8 +71,8 @@
                                 </p>
                                </div>  
                               <label for="">Costo del Tratamiento</label>
-                              <!--<input type="number" min="1" pattern="^[0-9]+" v-model.number="product_treatments_attribute.cost" required>-->
-                              <vue-numeric  class="form-control col-sm-6" currency="$" separator="." v-model="product_treatments_attribute.cost" required placeholder="Costo del Tratamiento" ></vue-numeric>
+                              <input min="0" class="form-control col-sm-6" pattern="^[0-9].+" @input="dotFilterCostTreatment( product_treatments_attribute.cost , index )" v-model="product_treatments_attribute.cost"  placeholder="Costo del Tratamiento" required>
+                              <!-- <vue-numeric  class="form-control col-sm-6" currency="$" separator="." v-model="product_treatments_attribute.cost" required placeholder="Costo del Tratamiento" ></vue-numeric> -->
                             </div>
                             </div>
                           </div>
@@ -98,7 +98,8 @@
                 <p>Peso: {{ product_treatment_phase.weight }}  Kg</p>
                 <p>Costo: {{ product_treatment_phase.cost }}  Kg</p>
               </div>
-<!-- 
+
+              <!-- 
               <div>
                 <p>
                   weight: {{ weight_phase }},
@@ -149,7 +150,7 @@ export default {
       f_product_id: '',
       phase_id_previous: '',
       phase_id: '',
-      weight_phase: Number,
+      weight_phase: '',
       count_treatment: 0,
       treatments: [],
       checkbox_treatment: false,
@@ -158,7 +159,8 @@ export default {
       treatment_new_name: null,
       treatment_cost: null,
       product_treatment_phase: [],
-      error_product_treatment_phase: []
+      error_product_treatment_phase: [],
+      product_treatments_attributes_two: [], 
     }
   },
   mounted () {
@@ -170,6 +172,30 @@ export default {
 
   },
   methods: {
+    dotFilterWeightPhase(){
+      var value = String(this.weight_phase.replace(/[.']/g,''));
+      var finalValue = value.replace(/[.']/g,'');
+      if(value.length >= 7){
+          finalValue=value.substring(0,value.length-6)+"'"+value.substring(value.length-6,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+        else if(value.length >= 4){
+          finalValue=value.substring(0,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+        this.weight_phase = finalValue;
+    },
+    dotFilterCostTreatment(NewValue,index){
+      var index = index 
+      var NewValueTwo = NewValue
+      var value = String(NewValueTwo).replace(/[.']/g,'')
+      var finalValue = value.replace(/[.']/g,'');
+      if(value.length >= 7){
+          finalValue=value.substring(0,value.length-6)+"'"+value.substring(value.length-6,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+        else if(value.length >= 4){
+          finalValue=value.substring(0,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+      this.product_treatments_attributes[index].cost = finalValue
+    },
     getProducts: function() {
       this.$http.get('http://localhost:3000/products').then(response => {
         this.products = response.body;
@@ -205,13 +231,14 @@ export default {
     },
     postProductTreatmentPhase: function() {
       var vmm = this;
+      this.cleanArrayProductTreatmentPhase(); 
       this.$http.post('http://localhost:3000/product_treatment_phases',{
-        weight: Number(this.weight_phase),
+        weight: Number(this.weight_phase.replace(/[.']/g,'')),
         phase_id_previous: this.phase_id_previous,
         phase_id: this.phase_id,
         product_id: this.f_product_id,
         product_treatment_phase_id: null,
-        product_treatments_attributes: this.product_treatments_attributes 
+        product_treatments_attributes: this.product_treatments_attributes
       }).then(response => {
         this.product_treatment_phase = response.body;
         this.weight_phase = ''
@@ -219,15 +246,20 @@ export default {
         this.phase_id = ''
         this.f_product_id = ''
         this.count_treatment = 0
-        this.product_treatments_attributes = []
+        // this.product_treatments_attributes = []
         this.alert_post_product_treatment_phase = true 
         setTimeout(function(){ vmm.alert_post_product_treatment_phase = false }, 3000);
       },response => {
         this.error_product_treatment_phase = response;
       });
-
-  
     },
+    cleanArrayProductTreatmentPhase: function(){
+      var newcost = 0
+      for(var index in this.product_treatments_attributes) {
+        newcost = String(this.product_treatments_attributes[index].cost)
+        this.product_treatments_attributes[index].cost = Number(newcost.replace(/[.']/g,''))
+      }
+    }, 
     getPhases: function() {
       this.$http.get('http://localhost:3000/phases').then(response => {
         this.phases = response.body;
