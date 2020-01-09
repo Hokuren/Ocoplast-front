@@ -52,9 +52,9 @@
                             <div class="card-body text-left">
                             <div class="form-group text-left" >
                               <label for="">Nombre del Tratamiento</label>
-                                <select class="col-sm-8" v-model="product_treatments_attribute.treatment_id" v-if="!product_treatments_attribute.checkbox_treatment">
-                                  <option v-for="treatment in treatments" 
-                                  :key="treatment.id" 
+                                <select class="col-sm-8" @change="validateCostTreatment(index,$event)" v-model="product_treatments_attribute.treatment_id" v-if="!product_treatments_attribute.checkbox_treatment">
+                                  <option v-for="(treatment, index_treatment) in treatments" 
+                                  :key="index_treatment" 
                                   :value="treatment.id"
                                   class="form-control col-sm-6"
                                   v-model="treatment_id"
@@ -71,8 +71,23 @@
                                 </p>
                                </div>  
                               <label for="">Costo del Tratamiento</label>
-                              <input min="0" class="form-control col-sm-6" pattern="^[0-9].+" @input="dotFilterCostTreatment( product_treatments_attribute.cost , index )" v-model="product_treatments_attribute.cost"  placeholder="Costo del Tratamiento" required>
+                              <input min="0" 
+                                      class="form-control col-sm-6" 
+                                      pattern="^[0-9].+" 
+                                      @blur="validateInputCostTreatment(  product_treatments_attribute.cost , index  )"
+                                      @input="dotFilterCostTreatment( product_treatments_attribute.cost , index )" 
+                                      v-model="product_treatments_attribute.cost"  
+                                      placeholder="Costo del Tratamiento" required>
                               <!-- <vue-numeric  class="form-control col-sm-6" currency="$" separator="." v-model="product_treatments_attribute.cost" required placeholder="Costo del Tratamiento" ></vue-numeric> -->
+                              
+                              <!-- alert -->
+                              <!-- v-if="product_treatments_attribute.alert=true" -->
+                              <div class="alert alert-danger" v-if="product_treatments_attribute.alert">
+                                <strong>Alerta!</strong> {{ message_modal_validate_input_cost_treatment }}
+                                <br>
+                                <button class="btn btn-danger" @click="product_treatments_attribute.alert=false">Aceptar</button>
+                              </div>
+
                             </div>
                             </div>
                           </div>
@@ -99,8 +114,8 @@
                 <p>Costo: {{ product_treatment_phase.cost }}  Kg</p>
               </div>
 
-              <!-- 
-              <div>
+              
+              <!-- <div>
                 <p>
                   weight: {{ weight_phase }},
                   <br>  
@@ -161,6 +176,7 @@ export default {
       product_treatment_phase: [],
       error_product_treatment_phase: [],
       product_treatments_attributes_two: [], 
+      message_modal_validate_input_cost_treatment: ''
     }
   },
   mounted () {
@@ -284,7 +300,10 @@ export default {
           cost: null,
           treatment_id: null,
           treatment_new_name: null,
-          checkbox_treatment: false
+          checkbox_treatment: false,
+          minimal_cost: null,
+          maximum_cost: null,
+          alert: false
         } 
       );
     },
@@ -293,10 +312,31 @@ export default {
         this.product_treatments_attributes[index].treatment_id = null;
       }
     },
-    cambiarHoja: function() {
-      this.$router.push({ name: 'Inventary'})
-    }   
+    validateCostTreatment: function(index,treatment_id){
+      var treatment_id = treatment_id.target.value
+      var index_treatment = this.treatments.findIndex(treatment => treatment.id === Number(treatment_id))
+      this.product_treatments_attributes[index].minimal_cost = Number(this.treatments[index_treatment].minimal_cost)
+      this.product_treatments_attributes[index].maximum_cost = Number(this.treatments[index_treatment].maximum_cost)
 
+      // console.log('product_treatments_attributes[index].cost ', this.product_treatments_attributes[index].minimal_cost)
+      // console.log('product_treatments_attributes[index].weight ', this.product_treatments_attributes[index].maximum_cost)
+    },
+    validateInputCostTreatment: function(cost, index){
+      var cost = Number(cost.replace(/[.']/g,''))
+      var name = this.treatments[index].name
+      var min_cost = Number(this.treatments[index].minimal_cost)
+      var max_cost = Number(this.treatments[index].maximum_cost)
+      if (cost >= min_cost && cost <= max_cost) {
+        // console.log('El costo esta en el rango \n','cost: ',cost ,' >= min_cost: ', min_cost, ' && cost: ', cost, ' <= max_cost: ', max_cost  );
+      } else {
+        this.message_modal_validate_input_cost_treatment = 'El valor del tratamiento: ' + name + ' no esta en el rango \n valor minimo: ' + min_cost + '\n valor maximo: ' + max_cost + '\n';
+        this.product_treatments_attributes[index].alert = true;
+        // $('#myModalValidateInputCostTreatment').modal('show');
+        // console.log('No esta el costo en el rango \n','cost: ',cost ,' >= min_cost: ', min_cost, ' && cost: ', cost, ' <= max_cost: ', max_cost  );
+      }
+    },
+    
+    
   }
 }
 

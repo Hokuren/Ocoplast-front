@@ -23,8 +23,8 @@
             </div>
             <div class="form-group text-left">
               <label for="formGroupExampleInput2">Peso a Clasificar (Kg)</label>
-              <!--<input type="number" class="form-control" min="1" pattern="^[0-9]+" placeholder="Peso en Kilos" v-model="weight_classification" required>-->
-              <vue-numeric  class="form-control"  separator="." v-model="weight_classification" required placeholder="Peso en Kilos"></vue-numeric>
+              <input class="form-control" min="0" pattern="^[0-9].+" placeholder="Peso en Kilos" @input="dotFilterWeightClassification()" v-model="weight_classification" required>
+              <!-- <vue-numeric  class="form-control"  separator="." v-model="weight_classification" required placeholder="Peso en Kilos"></vue-numeric> -->
             </div>
             <div class="form-group text-left">
               <label for="formGroupExampleInput2">Nombre del Tratamiento</label>
@@ -32,9 +32,8 @@
             </div>
             <div class="form-group text-left">
               <label for="formGroupExampleInput2">Costo Clasificación</label>
-              <!--<input type="number" class="form-control" min="0" pattern="^[0-9]+" placeholder="Peso en Kilos" v-model="cost_classification" required>-->
-              <vue-numeric  class="form-control" currency="$" separator="." v-model="cost_classification" required placeholder="Costo Clasificacion"></vue-numeric>
-                  
+              <input class="form-control" min="0" pattern="^[0-9].+" placeholder="Peso en Kilos" @input="dotFilterCostClassification()" v-model="cost_classification" required>
+              <!-- <vue-numeric  class="form-control" currency="$" separator="." v-model="cost_classification" required placeholder="Costo Clasificacion"></vue-numeric> -->     
             </div>
         
             <div class="form-group text-left">
@@ -43,10 +42,10 @@
                   <div class="card">
                     <div class="card-body text-left">
                       <div class="form-group text-left" >
-                        <label for="">Cantidad a Clasificar</label>
-                        <!--<input type="number" min="1" pattern="^[0-9]+" v-model.number="product_classificacion.weight" required> -->
-                        <vue-numeric  class="form-control" separator="." v-model="product_classificacion.weight" required placeholder="Cantidad a Clasificar"></vue-numeric>
-                
+                        <label for="">Cantidad a Clasificar (Kg)</label>
+                        <!-- dotFilterProductClassificacion -->
+                        <input class="form-control" min="1" pattern="^[0-9].+" @input="dotFilterProductClassificacion(product_classificacion.weight,index)" v-model="product_classificacion.weight" placeholder="Cantidad a Clasificar" required> 
+                        <!-- <vue-numeric  class="form-control" separator="." v-model="product_classificacion.weight" required placeholder="Cantidad a Clasificar"></vue-numeric> -->
                         <button type="submit" class="btn btn-danger" @click="removeClassificacion(index)"> - </button>
                         <br>
                         <label for="">Producto a Clasificar</label>
@@ -94,7 +93,7 @@
               <p>Peso: {{ product_treatment_phase.weight }}  Kg</p>
               <p>Costo: {{ product_treatment_phase.cost }}  Kg</p>
           </div> 
-<!-- 
+
           <div>
             <h3>Parametros</h3>
             <p>Product_id: {{ product_id }}</p>
@@ -104,7 +103,7 @@
             <p>Fase anterior: {{ phase_id_previous }}</p>
             <p>Product classificacions: {{ product_classificacions }}</p>
             <p>product_treatment_phase: {{ product_treatment_phase }}</p>
-          </div> -->
+          </div>
 
         </div> <!-- Col 9-->
       </div> <!-- Closed row -->
@@ -127,7 +126,7 @@ export default {
   name: 'Classification',
   data () {
     return {
-      weight_classification: Number,
+      weight_classification: '',
       cost_classification: '',
       name_classification: 'Clasificación',
       phases: [],
@@ -150,6 +149,41 @@ export default {
 
   },
   methods: {
+    dotFilterProductClassificacion (NewValue,index){
+      var index = index 
+      var NewValueTwo = NewValue
+      var value = String(NewValueTwo).replace(/[.']/g,'')
+      var finalValue = value.replace(/[.']/g,'');
+      if(value.length >= 7){
+          finalValue=value.substring(0,value.length-6)+"'"+value.substring(value.length-6,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+        else if(value.length >= 4){
+          finalValue=value.substring(0,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+      this.product_classificacions[index].weight = finalValue
+    },
+    dotFilterWeightClassification(){
+      var value = String(this.weight_classification.replace(/[.']/g,''));
+      var finalValue = value.replace(/[.']/g,'');
+      if(value.length >= 7){
+        finalValue=value.substring(0,value.length-6)+"'"+value.substring(value.length-6,value.length-3)+"."+value.substring(value.length-3,value.length);
+      }
+      else if(value.length >= 4){ 
+        finalValue=value.substring(0,value.length-3)+"."+value.substring(value.length-3,value.length);
+      }
+      this.weight_classification = finalValue;
+    },
+    dotFilterCostClassification(){
+      var value = String(this.cost_classification.replace(/[.']/g,''));
+      var finalValue = value.replace(/[.']/g,'');
+      if(value.length >= 7){
+        finalValue=value.substring(0,value.length-6)+"'"+value.substring(value.length-6,value.length-3)+"."+value.substring(value.length-3,value.length);
+      }
+      else if(value.length >= 4){ 
+        finalValue=value.substring(0,value.length-3)+"."+value.substring(value.length-3,value.length);
+      }
+      this.cost_classification = finalValue;
+    },
     getPhases: function() {
       this.$http.get('http://localhost:3000/phases').then(response => {
         this.phases = response.body;
@@ -168,15 +202,13 @@ export default {
     addClassification: function() {
       this.count_classification++;
       this.addProductClassificacion();
-      console.log("presionado el addClassification")
     },
     addProductClassificacion: function(){
-      console.log("presionado el addProductClassificacion")
       this.product_classificacions.push(
         {
           weight: null, 
     	    phase_id: null,
-    	    product_id: null
+          product_id: null
         } 
       );
     },
@@ -187,11 +219,14 @@ export default {
       this.product_classificacions.splice(index,1);
     },
     postProductTreatmentPhaseClassification: function() {
+
+      this.cleanArrayProductClassificacions();
+
       this.$http.post('http://localhost:3000/product_treatment_phases/classification',{
-        weight_inventary: Number(this.weight_classification),
+        weight_inventary: Number(this.weight_classification.replace(/[.']/g,'')),
         weight: null,
         cost:  null,
-        cost_treatments: Number(this.cost_classification),
+        cost_treatments: Number(this.cost_classification.replace(/[.']/g,'')),
         name_treatments: this.name_classification,
         phase_id: this.phase_id_previous,
         product_id: Number(this.product_id),
@@ -199,17 +234,25 @@ export default {
         classification: this.product_classificacions
       }).then(response => {
         this.product_treatment_phase = response.body;
+
+        this.weight_classification = '';
+        this.cost_classification = '';
+        this.phase_id_previous = '';
+        this.classification_product_id = '';
+        this.product_classificacions = [];
+        this.alert_post_classification = true;
       },response => {
         this.error_product_treatment_phase = response;
       });
-        this.weight_classification = ''
-        this.cost_classification = ''
-        this.phase_id_previous = ''
-        this.classification_product_id = ''
-        this.product_classificacions = []
-        this.alert_post_classification = true;
       var vmm = this;
       setTimeout(function(){ vmm.alert_post_classification = false }, 3000);
+    },
+    cleanArrayProductClassificacions: function(){
+      var newWeight = 0
+      for(var index in this.product_classificacions) {
+        newWeight = String(this.product_classificacions[index].weight)
+        this.product_classificacions[index].weight = Number(newWeight.replace(/[.']/g,''))
+      }
     }
 
   } //closed methods
