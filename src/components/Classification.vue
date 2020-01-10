@@ -35,7 +35,65 @@
               <input class="form-control" min="0" pattern="^[0-9].+" placeholder="Peso en Kilos" @input="dotFilterCostClassification()" v-model="cost_classification" required>
               <!-- <vue-numeric  class="form-control" currency="$" separator="." v-model="cost_classification" required placeholder="Costo Clasificacion"></vue-numeric> -->     
             </div>
-        
+
+
+            <!-- treatments -->
+            <div class="form-group text-left">
+              <p>Tratamientos</p>
+
+              <br>
+              <div v-if="count_treatment > 0 ">
+                <div v-for="(product_treatments_attribute, index) in product_treatments_attributes" :key="product_treatments_attribute.id">
+                  <div class="card col-sm-8">
+                    <div class="card-body text-left">
+                      <div class="form-group text-left" >
+                        <label for="">Nombre del Tratamiento</label>
+                          <select class="col-sm-8" @change="validateCostTreatment(index,$event)" v-model="product_treatments_attribute.treatment_id" v-if="!product_treatments_attribute.checkbox_treatment">
+                            <option v-for="(treatment, index_treatment) in treatments" 
+                            :key="index_treatment" 
+                            :value="treatment.id"
+                            class="form-control col-sm-6"
+                            v-model="treatment_id"
+                            >{{ treatment.name }}</option>
+                          </select> 
+                        <div>
+                          <p>
+                            <input type="checkbox" 
+                                    v-model="product_treatments_attribute.checkbox_treatment"
+                                    @change="validate_product_treatments_attributes_id(index)">
+                            Nuevo Tratamiento
+                            <input  class="col-sm-6" type="text" v-if="product_treatments_attribute.checkbox_treatment" v-model="product_treatments_attribute.treatment_new_name" >
+                            <button type="submit" class="btn btn-danger" @click="removeTreatment(index)"> - </button>
+                          </p>
+                        </div>  
+                        <label for="">Costo del Tratamiento</label>
+                        <input min="0" 
+                                class="form-control col-sm-6" 
+                                pattern="^[0-9].+" 
+                                @blur="validateInputCostTreatment(  product_treatments_attribute.cost , index  )"
+                                @input="dotFilterCostTreatment( product_treatments_attribute.cost , index )" 
+                                v-model="product_treatments_attribute.cost"  
+                                placeholder="Costo del Tratamiento" required>
+                    
+                        <div class="alert alert-danger" v-if="product_treatments_attribute.alert">
+                          <strong>Alerta!</strong> {{ message_modal_validate_input_cost_treatment }}
+                          <br>
+                          <button class="btn btn-danger" @click="product_treatments_attribute.alert=false">Aceptar</button>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                </div>
+              </div>
+              <label for="formGroupExampleInput2">Tratamientos ({{ count_treatment }})</label>
+              <button type="submit" class="btn btn-info" @click="addTreatment"> + </button>
+              <br>
+
+            </div>
+            <!-- finish treatmets -->
+
             <div class="form-group text-left">
               <div v-if="count_classification > 0 ">
                 <div v-for="(product_classificacion, index) in product_classificacions" :key="product_classificacion.id">
@@ -96,6 +154,7 @@
 
           <div>
             <h3>Parametros</h3>
+            <p>product_treatments_attributes {{ product_treatments_attributes }}</p>
             <p>Product_id: {{ product_id }}</p>
             <p>peso en K/G{{ weight_classification }}</p>
             <p>Costo Classification: {{ cost_classification }}</p>
@@ -138,12 +197,16 @@ export default {
       phase_id: '',
       classification_product_id: '',
       alert_post_classification: false,
-      product_treatment_phase: []
+      product_treatment_phase: [],
+      count_treatment: 0,
+      product_treatments_attributes: [],
+      treatments: []
     }
   },
   mounted () {
     this.getPhases();
     this.getProducts();
+    this.getTreatments();
   },
   beforeUpdate () {
 
@@ -253,7 +316,44 @@ export default {
         newWeight = String(this.product_classificacions[index].weight)
         this.product_classificacions[index].weight = Number(newWeight.replace(/[.']/g,''))
       }
-    }
+    }, 
+    // añadir tratamiento 
+    addTreatment: function() {
+      this.count_treatment++;
+      this.addProductTreatmentsAttributes();
+    },
+    removeTreatment: function(index) {
+      if (this.count_treatment > 0) {
+        this.count_treatment--; 
+      }
+      this.product_treatments_attributes.splice(index,1);
+    },
+    addProductTreatmentsAttributes: function(){
+      this.product_treatments_attributes.push(
+        {
+          cost: null,
+          treatment_id: null,
+          treatment_new_name: null,
+          checkbox_treatment: false,
+          minimal_cost: null,
+          maximum_cost: null,
+          alert: false
+        } 
+      );
+    },
+    getTreatments: function() {
+      this.$http.get('http://localhost:3000/treatments').then(response => {
+        this.treatments = response.body;
+      },response => {
+        //error
+      })
+    },
+    validate_product_treatments_attributes_id: function(index){
+      if(this.product_treatments_attributes[index].checkbox_treatment) {
+        this.product_treatments_attributes[index].treatment_id = null;
+      }
+    },
+
 
   } //closed methods
 }
