@@ -26,6 +26,7 @@
               <input class="form-control" min="0" pattern="^[0-9].+" placeholder="Peso en Kilos" @input="dotFilterWeightClassification()" v-model="weight_classification" required>
               <!-- <vue-numeric  class="form-control"  separator="." v-model="weight_classification" required placeholder="Peso en Kilos"></vue-numeric> -->
             </div>
+            <!--
             <div class="form-group text-left">
               <label for="formGroupExampleInput2">Nombre del Tratamiento</label>
               <input type="text" class="form-control" placeholder="Nombre de Tratamientos" v-model="name_classification" required disabled>
@@ -33,9 +34,9 @@
             <div class="form-group text-left">
               <label for="formGroupExampleInput2">Costo Clasificación</label>
               <input class="form-control" min="0" pattern="^[0-9].+" placeholder="Peso en Kilos" @input="dotFilterCostClassification()" v-model="cost_classification" required>
-              <!-- <vue-numeric  class="form-control" currency="$" separator="." v-model="cost_classification" required placeholder="Costo Clasificacion"></vue-numeric> -->     
+              <vue-numeric  class="form-control" currency="$" separator="." v-model="cost_classification" required placeholder="Costo Clasificacion"></vue-numeric>    
             </div>
-
+            -->
 
             <!-- treatments -->
             <div class="form-group text-left">
@@ -62,7 +63,7 @@
                                     v-model="product_treatments_attribute.checkbox_treatment"
                                     @change="validate_product_treatments_attributes_id(index)">
                             Nuevo Tratamiento
-                            <input  class="col-sm-6" type="text" v-if="product_treatments_attribute.checkbox_treatment" v-model="product_treatments_attribute.treatment_new_name" >
+                            <input  class="col-sm-6" type="text" v-if="product_treatments_attribute.checkbox_treatment" v-model="product_treatments_attribute.name_treatment" >
                             <button type="submit" class="btn btn-danger" @click="removeTreatment(index)"> - </button>
                           </p>
                         </div>  
@@ -70,9 +71,9 @@
                         <input min="0" 
                                 class="form-control col-sm-6" 
                                 pattern="^[0-9].+" 
-                                @blur="validateInputCostTreatment(  product_treatments_attribute.cost , index  )"
-                                @input="dotFilterCostTreatment( product_treatments_attribute.cost , index )" 
-                                v-model="product_treatments_attribute.cost"  
+                                @blur="validateInputCostTreatment(  product_treatments_attribute.cost_treatment , index  )"
+                                @input="dotFilterCostTreatment( product_treatments_attribute.cost_treatment , index )" 
+                                v-model="product_treatments_attribute.cost_treatment"  
                                 placeholder="Costo del Tratamiento" required>
                     
                         <div class="alert alert-danger" v-if="product_treatments_attribute.alert">
@@ -152,6 +153,7 @@
               <p>Costo: {{ product_treatment_phase.cost }}  Kg</p>
           </div> 
 
+          <!--
           <div>
             <h3>Parametros</h3>
             <p>product_treatments_attributes {{ product_treatments_attributes }}</p>
@@ -163,6 +165,7 @@
             <p>Product classificacions: {{ product_classificacions }}</p>
             <p>product_treatment_phase: {{ product_treatment_phase }}</p>
           </div>
+          -->
 
         </div> <!-- Col 9-->
       </div> <!-- Closed row -->
@@ -247,6 +250,19 @@ export default {
       }
       this.cost_classification = finalValue;
     },
+    dotFilterCostTreatment(NewValue,index){
+      var index = index 
+      var NewValueTwo = NewValue
+      var value = String(NewValueTwo).replace(/[.']/g,'')
+      var finalValue = value.replace(/[.']/g,'');
+      if(value.length >= 7){
+          finalValue=value.substring(0,value.length-6)+"'"+value.substring(value.length-6,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+        else if(value.length >= 4){
+          finalValue=value.substring(0,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+      this.product_treatments_attributes[index].cost_treatment = finalValue
+    },
     getPhases: function() {
       this.$http.get('http://localhost:3000/phases').then(response => {
         this.phases = response.body;
@@ -284,13 +300,15 @@ export default {
     postProductTreatmentPhaseClassification: function() {
 
       this.cleanArrayProductClassificacions();
+      this.cleanArrayProductTreatmentPhase();
 
       this.$http.post('http://localhost:3000/product_treatment_phases/classification',{
         weight_inventary: Number(this.weight_classification.replace(/[.']/g,'')),
         weight: null,
         cost:  null,
-        cost_treatments: Number(this.cost_classification.replace(/[.']/g,'')),
-        name_treatments: this.name_classification,
+        //cost_treatments: Number(this.cost_classification.replace(/[.']/g,'')),
+        //name_treatments: this.name_classification,
+        treatments: this.product_treatments_attributes,
         phase_id: this.phase_id_previous,
         product_id: Number(this.product_id),
         product_treatment_phase_id: null,
@@ -310,6 +328,13 @@ export default {
       var vmm = this;
       setTimeout(function(){ vmm.alert_post_classification = false }, 3000);
     },
+    cleanArrayProductTreatmentPhase: function(){
+      var newcost = 0
+      for(var index in this.product_treatments_attributes) {
+        newcost = String(this.product_treatments_attributes[index].cost_treatment)
+        this.product_treatments_attributes[index].cost_treatment = Number(newcost.replace(/[.']/g,''))
+      }
+    }, 
     cleanArrayProductClassificacions: function(){
       var newWeight = 0
       for(var index in this.product_classificacions) {
@@ -331,10 +356,9 @@ export default {
     addProductTreatmentsAttributes: function(){
       this.product_treatments_attributes.push(
         {
-          cost: null,
           treatment_id: null,
-          treatment_new_name: null,
-          checkbox_treatment: false,
+          name_treatment: null,
+          cost_treatment: null,
           minimal_cost: null,
           maximum_cost: null,
           alert: false
