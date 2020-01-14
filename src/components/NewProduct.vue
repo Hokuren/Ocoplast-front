@@ -83,14 +83,14 @@ export default {
   },
   methods: {
     getProducts: function() {
-      this.$http.get('http://localhost:3000/products').then(response => {
+      this.$http.get('products').then(response => {
         this.products = response.body;
       },response => {
         //error
       })
     },
     postProduct: function() {
-      this.$http.post('http://localhost:3000/products',{
+      this.$http.post('products',{
         name: this.name_product,
         product_id: this.product_id
       }).then(response => {

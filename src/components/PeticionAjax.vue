@@ -213,21 +213,21 @@ export default {
       this.product_treatments_attributes[index].cost = finalValue
     },
     getProducts: function() {
-      this.$http.get('http://localhost:3000/products').then(response => {
+      this.$http.get('products').then(response => {
         this.products = response.body;
       },response => {
         //error
       })
     },
     getTreatments: function() {
-      this.$http.get('http://localhost:3000/treatments').then(response => {
+      this.$http.get('treatments').then(response => {
         this.treatments = response.body;
       },response => {
         //error
       })
     },
     postQuantities: function() {
-      this.$http.post('http://localhost:3000/quantities',{
+      this.$http.post('quantities',{
         weight: this.weight,
         cost: this.cost,
         product_id: this.product_id,
@@ -248,7 +248,7 @@ export default {
     postProductTreatmentPhase: function() {
       var vmm = this;
       this.cleanArrayProductTreatmentPhase(); 
-      this.$http.post('http://localhost:3000/product_treatment_phases',{
+      this.$http.post('product_treatment_phases',{
         weight: Number(this.weight_phase.replace(/[.']/g,'')),
         phase_id_previous: this.phase_id_previous,
         phase_id: this.phase_id,
@@ -277,7 +277,7 @@ export default {
       }
     }, 
     getPhases: function() {
-      this.$http.get('http://localhost:3000/phases').then(response => {
+      this.$http.get('phases').then(response => {
         this.phases = response.body;
         this.phases.splice( this.phases.indexOf('Pool'), 1 );
       },response => {

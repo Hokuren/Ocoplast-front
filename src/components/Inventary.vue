@@ -53,14 +53,14 @@ export default {
   },
   methods: {
     getProducts: function() {
-      this.$http.get('http://localhost:3000/products').then(response => {
+      this.$http.get('products').then(response => {
         this.products = response.body;
       },response => {
         //error
       })
     },
     getPhases: function() {
-      this.$http.get('http://localhost:3000/phases').then(response => {
+      this.$http.get('phases').then(response => {
         this.phases = response.body;
         this.phases.splice( this.phases.indexOf('Pool'), 1 );
       },response => {
@@ -68,7 +68,7 @@ export default {
       })
     },
     post_phase_quantities: function(){
-      this.$http.post('http://localhost:3000/phase_quantities',{
+      this.$http.post('phase_quantities',{
         phase_id: this.phase_id,
 	      product_id: this.product_id
       }).then(response => {

@@ -76,7 +76,7 @@ export default {
   methods: {
     getPullQuantities: function(){
       var vm = this;
-      this.$http.get('http://localhost:3000/pull_quantities',{
+      this.$http.get('pull_quantities',{
 	      phase_id: Number(5)
       }).then(response => {
         vm.pull_quantities = response.body;

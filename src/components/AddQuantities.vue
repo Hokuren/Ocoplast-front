@@ -135,21 +135,21 @@ export default {
         this.cost = finalValue;
     },
     getProducts: function() {
-      this.$http.get('http://localhost:3000/products').then(response => {
+      this.$http.get('products').then(response => {
         this.products = response.body;
       },response => {
         //error
       })
     },
     getTreatments: function() {
-      this.$http.get('http://localhost:3000/treatments').then(response => {
+      this.$http.get('treatments').then(response => {
         this.treatments = response.body;
       },response => {
         //error
       })
     },
     postQuantities: function() {
-      this.$http.post('http://localhost:3000/quantities',{
+      this.$http.post('quantities',{
         weight: Number(this.weight.replace(/[.']/g,'')),
         cost: Number(this.cost.replace(/[.']/g,'')),
         product_id: this.product_id,
@@ -168,7 +168,7 @@ export default {
       setTimeout(function(){ vm.arlert_post_quantity = false }, 3000);
     },
     postProductTreatmentPhase: function() {
-      this.$http.post('http://localhost:3000/product_treatment_phases',{
+      this.$http.post('product_treatment_phases',{
         weight: Number(this.weight_phase),
         phase_id_previous: this.phase_id_previous,
         phase_id: this.phase_id,
@@ -191,7 +191,7 @@ export default {
       setTimeout(function(){ vmm.alert_post_product_treatment_phase = false }, 3000);
     },
     getPhases: function() {
-      this.$http.get('http://localhost:3000/phases').then(response => {
+      this.$http.get('phases').then(response => {
         this.phases = response.body;
       },response => {
         //error

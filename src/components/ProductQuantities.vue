@@ -60,8 +60,10 @@
                     Costo: {{ product_detail.cost }}  (Kg) <br>
                     Peso Inicial: {{ product_detail.weight_initial }} (Kg) <br>
                     Peso: {{ product_detail.weight }} (Kg) <br> 
-                    Fecha: {{ product_detail.date }}     
+                    Fecha: {{ product_detail.date }}
+                    <button class="btn btn-primary">Editar</button>     
                   </th>
+                  
                 </tr>
               </tbody>
             </table>
@@ -117,7 +119,7 @@ export default {
   },
   methods: {
     getProducts: function() {
-      this.$http.get('http://localhost:3000/products').then(response => {
+      this.$http.get('products').then(response => {
         this.products = response.body;
       },response => {
         //error
@@ -125,7 +127,7 @@ export default {
     },
     postProductQuantities: function(){
       console.log('ingreso al post');
-      this.$http.post('http://localhost:3000/product_quantities',{
+      this.$http.post('product_quantities',{
         id: Number(this.product_id),
         initial_date: this.initial_date,
         last_date: this.last_date,
@@ -141,7 +143,7 @@ export default {
     postProductQuantitiesDetail: function(){
       console.log('ingreso al post Detail');
       console.log(Number(this.product_id), this.initial_date,  this.last_date)
-      this.$http.post('http://localhost:3000/product_quantities/detail',{
+      this.$http.post('product_quantities/detail',{
         id: Number(this.product_id),
         initial_date: this.initial_date,
         last_date: this.last_date,

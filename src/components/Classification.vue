@@ -264,7 +264,7 @@ export default {
       this.product_treatments_attributes[index].cost_treatment = finalValue
     },
     getPhases: function() {
-      this.$http.get('http://localhost:3000/phases').then(response => {
+      this.$http.get('phases').then(response => {
         this.phases = response.body;
         this.phases.splice( this.phases.indexOf('Pool'), 1 );
       },response => {
@@ -272,7 +272,7 @@ export default {
       })
     },
     getProducts: function() {
-      this.$http.get('http://localhost:3000/products').then(response => {
+      this.$http.get('products').then(response => {
         this.products = response.body;
       },response => {
         //error
@@ -302,7 +302,7 @@ export default {
       this.cleanArrayProductClassificacions();
       this.cleanArrayProductTreatmentPhase();
 
-      this.$http.post('http://localhost:3000/product_treatment_phases/classification',{
+      this.$http.post('product_treatment_phases/classification',{
         weight_inventary: Number(this.weight_classification.replace(/[.']/g,'')),
         weight: null,
         cost:  null,
@@ -366,7 +366,7 @@ export default {
       );
     },
     getTreatments: function() {
-      this.$http.get('http://localhost:3000/treatments').then(response => {
+      this.$http.get('treatments').then(response => {
         this.treatments = response.body;
       },response => {
         //error
