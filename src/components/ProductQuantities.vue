@@ -48,26 +48,65 @@
 
           <div class="col-4" >
             <table class="table">
-            <!-- <thead class="thead-dark">
-                <tr>
-                  <th scope="col" class="text-left">Producto</th>
-                  <th scope="col" v-for="(phase, index) in phases" :key="index" class="text-left">{{ phase.name }}</th>
-                </tr>
-              </thead> -->
               <tbody>
                 <tr scope="row" v-for="(product_detail, index) in product_quantities_detail" :key="index">
                   <th class="text-left">
-                    Costo: {{ product_detail.cost }}  (Kg) <br>
-                    Peso Inicial: {{ product_detail.weight_initial }} (Kg) <br>
                     Peso: {{ product_detail.weight }} (Kg) <br> 
+                    Peso Inicial: {{ product_detail.weight_initial }} (Kg) <br>
+                    Costo: {{ product_detail.cost }}  (Kg) <br>
                     Fecha: {{ product_detail.date }}
-                    <button class="btn btn-primary">Editar</button>     
+                    <!-- <button class="btn btn-primary">Editar</button>     -->
+                    <button type="button" 
+                            class="btn btn-primary"
+                            data-toggle="modal" 
+                            data-target="#editQuantityModal" 
+                            @click="editQuantity(product_detail.id,product_detail.weight,product_detail.cost,product_detail.date)"
+                            >Editar
+                    </button> 
                   </th>
-                  
                 </tr>
               </tbody>
             </table>
+
           </div>
+
+          <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Open modal for @mdo</button>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@fat">Open modal for @fat</button>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Open modal for @getbootstrap</button> -->
+
+          <div class="modal fade" id="editQuantityModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Editar</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form>
+                    <div class="form-group text-left">
+                      <label for="recipient-name" class="col-form-label">Peso:</label>
+                      <input type="text" class="form-control" id="recipient-name" v-model="weight_quantity" @input="dotFilterWeightQuantity()" >
+                    </div>
+                    <div class="form-group text-left">
+                      <label for="message-text" class="col-form-label">Costo:</label>
+                      <input class="form-control" id="message-text" v-model="cost_quantity" @input="dotFilterCostQuantity()">
+                    </div>
+                     <!-- <div class="form-group text-left">
+                      <label for="message-text" class="col-form-label">Fecha:</label>
+                      <input class="form-control" id="message-text" v-model="date_quantity">
+                    </div> -->
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" @click="putEditQuantity(id_quantity)" >Editar</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
 
 
       </div>   <!-- closed row -->
@@ -85,8 +124,6 @@
       </div>
     </div>
     -->
-
-  
 
   </div> 
 </template> 
@@ -108,7 +145,11 @@ export default {
       products: [],
       product_quantities:[],
       product_quantities_detail: [],
-      card_invetary_product: false
+      card_invetary_product: false,
+      weight_quantity: null,
+      cost_quantity: null,
+      date_quantity: '',
+      id_quantity: null
     }
   },
   mounted () {
@@ -126,7 +167,6 @@ export default {
       })
     },
     postProductQuantities: function(){
-      console.log('ingreso al post');
       this.$http.post('product_quantities',{
         id: Number(this.product_id),
         initial_date: this.initial_date,
@@ -141,8 +181,6 @@ export default {
 
     },
     postProductQuantitiesDetail: function(){
-      console.log('ingreso al post Detail');
-      console.log(Number(this.product_id), this.initial_date,  this.last_date)
       this.$http.post('product_quantities/detail',{
         id: Number(this.product_id),
         initial_date: this.initial_date,
@@ -153,7 +191,48 @@ export default {
         //error
       });
     },
-
+    editQuantity: function(id_quantity,weight, cost, date){
+      this.id_quantity = Number(id_quantity)
+      this.weight_quantity = Number(weight)
+      this.cost_quantity = Number(cost)
+      this.date_quantity = date
+      this.dotFilterWeightQuantity();
+      this.dotFilterCostQuantity();
+    },
+    dotFilterWeightQuantity: function(){
+      var value = String(this.weight_quantity.replace(/[.']/g,''));
+      var finalValue = value.replace(/[.']/g,'');
+      if(value.length >= 7){
+          finalValue=value.substring(0,value.length-6)+"'"+value.substring(value.length-6,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+        else if(value.length >= 4){
+          finalValue=value.substring(0,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+        this.weight_quantity = finalValue;
+    },
+    dotFilterCostQuantity: function(){
+      var value = String(this.cost_quantity.replace(/[.']/g,''));
+      var finalValue = value.replace(/[.']/g,'');
+      if(value.length >= 7){
+          finalValue=value.substring(0,value.length-6)+"'"+value.substring(value.length-6,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+        else if(value.length >= 4){
+          finalValue=value.substring(0,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+        this.cost_quantity = finalValue;
+    },
+    putEditQuantity: function(id){
+      var vm = this;
+      this.$http.put('quantities/'+id,{
+        weight: Number(this.weight_quantity.replace(/[.']/g,'')),
+        cost: Number(this.cost_quantity.replace(/[.']/g,'')),
+      }).then(response => {
+        $('#editQuantityModal').modal('hide');
+        vm.postProductQuantitiesDetail();
+      },response => {
+        //error
+      }); 
+    }
 
   }
 }
