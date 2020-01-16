@@ -35,14 +35,10 @@
                 <a class="dropdown-item" href="#" @click="rootPullQuantities">Reporte Pool de Producto</a>
               </div>
             </li>
-            <!-- <li class="nav-item">
-              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-            </li> -->
+            <li class="nav-item active">
+              <a class="nav-link" href="#" @click="rootParametrizeCost">Parametrizar Costos <span class="sr-only">(current)</span></a>
+            </li>
           </ul>
-          <!-- <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </form> -->
         </div>
       </nav>
 
@@ -76,6 +72,9 @@ export default {
     rootAddQuantities: function() {
       this.$router.push({ name: 'AddQuantities'})
     },
+    rootParametrizeCost: function(){
+      this.$router.push({ name: 'ParametrizeCost'})
+    }
   }
 }
 </script>

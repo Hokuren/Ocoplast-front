@@ -9,6 +9,7 @@ import PullQuantities from '@/components/PullQuantities'
 import Classification from '@/components/Classification'
 import NewProduct from '@/components/NewProduct'
 import AddQuantities from '@/components/AddQuantities'
+import ParametrizeCost from '@/components/ParametrizeCost'
 
 Vue.use(Router)
 
@@ -48,6 +49,11 @@ export default new Router({
       path: '/AddQuantities',
       name: 'AddQuantities',
       component: AddQuantities
-    }
+    },
+    {
+      path: '/ParametrizeCost',
+      name: 'ParametrizeCost',
+      component: ParametrizeCost
+    },
   ]
 })
