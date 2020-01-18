@@ -317,9 +317,6 @@ export default {
       var index_treatment = this.treatments.findIndex(treatment => treatment.id === Number(treatment_id))
       this.product_treatments_attributes[index].minimal_cost = Number(this.treatments[index_treatment].minimal_cost)
       this.product_treatments_attributes[index].maximum_cost = Number(this.treatments[index_treatment].maximum_cost)
-
-      // console.log('product_treatments_attributes[index].cost ', this.product_treatments_attributes[index].minimal_cost)
-      // console.log('product_treatments_attributes[index].weight ', this.product_treatments_attributes[index].maximum_cost)
     },
     validateInputCostTreatment: function(cost, index){
       var cost = Number(cost.replace(/[.']/g,''))
@@ -327,12 +324,9 @@ export default {
       var min_cost = Number(this.treatments[index].minimal_cost)
       var max_cost = Number(this.treatments[index].maximum_cost)
       if (cost >= min_cost && cost <= max_cost) {
-        // console.log('El costo esta en el rango \n','cost: ',cost ,' >= min_cost: ', min_cost, ' && cost: ', cost, ' <= max_cost: ', max_cost  );
       } else {
         this.message_modal_validate_input_cost_treatment = 'El valor del tratamiento: ' + name + ' no esta en el rango \n valor minimo: ' + min_cost + '\n valor maximo: ' + max_cost + '\n';
         this.product_treatments_attributes[index].alert = true;
-        // $('#myModalValidateInputCostTreatment').modal('show');
-        // console.log('No esta el costo en el rango \n','cost: ',cost ,' >= min_cost: ', min_cost, ' && cost: ', cost, ' <= max_cost: ', max_cost  );
       }
     },
     

@@ -72,7 +72,6 @@ export default {
         phase_id: this.phase_id,
 	      product_id: this.product_id
       }).then(response => {
-        console.log(response);
         this.phase_quantities = response.body;
       },response =>{
         //error
