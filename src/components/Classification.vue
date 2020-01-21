@@ -26,6 +26,24 @@
               <input class="form-control" min="0" pattern="^[0-9].+" placeholder="Peso en Kilos" @input="dotFilterWeightClassification()" v-model="weight_classification" required>
               <!-- <vue-numeric  class="form-control"  separator="." v-model="weight_classification" required placeholder="Peso en Kilos"></vue-numeric> -->
             </div>
+           <div class="form-group text-left">
+              <label for="formGroupExampleInput2">Desperdicio</label>
+              <input  class="form-control" min="0" pattern="^[0-9].+" @input="dotFilterWaste()" v-model="waste"  required>
+            </div>
+            <div class="form-group text-left">
+              <label for="formGroupExampleInput2">Costo Clasificacion Por (Kg)</label>
+              <input  class="form-control" min="0" pattern="^[0-9].+" :placeholder="cost_classification.cost" disabled>
+            </div>
+            <div class="form-group text-left">
+              <label for="formGroupExampleInput2">Costo Total Clasificacion</label>
+              <input  class="form-control" min="0" pattern="^[0-9].+"  
+                      :placeholder="cost_classification_total"
+                      disabled
+              >
+            </div>
+    
+    
+
             <!--
             <div class="form-group text-left">
               <label for="formGroupExampleInput2">Nombre del Tratamiento</label>
@@ -39,7 +57,7 @@
             -->
 
             <!-- treatments -->
-            <div class="form-group text-left">
+<!--             <div class="form-group text-left">
               <p>Tratamientos</p>
 
               <br>
@@ -92,7 +110,8 @@
               <button type="submit" class="btn btn-info" @click="addTreatment"> + </button>
               <br>
 
-            </div>
+            </div> -->
+
             <!-- finish treatmets -->
 
             <div class="form-group text-left">
@@ -102,7 +121,6 @@
                     <div class="card-body text-left">
                       <div class="form-group text-left" >
                         <label for="">Cantidad a Clasificar (Kg)</label>
-                        <!-- dotFilterProductClassificacion -->
                         <input class="form-control" min="1" pattern="^[0-9].+" @input="dotFilterProductClassificacion(product_classificacion.weight,index)" v-model="product_classificacion.weight" placeholder="Cantidad a Clasificar" required> 
                         <!-- <vue-numeric  class="form-control" separator="." v-model="product_classificacion.weight" required placeholder="Cantidad a Clasificar"></vue-numeric> -->
                         <button type="submit" class="btn btn-danger" @click="removeClassificacion(index)"> - </button>
@@ -153,9 +171,11 @@
               <p>Costo: {{ product_treatment_phase.cost }}  Kg</p>
           </div> 
 
-          <!--
+          
           <div>
             <h3>Parametros</h3>
+            <p>cost_classification: {{ cost_classification }}</p>
+            <p>cost_classification_total: {{ cost_classification_total }}</p>
             <p>product_treatments_attributes {{ product_treatments_attributes }}</p>
             <p>Product_id: {{ product_id }}</p>
             <p>peso en K/G{{ weight_classification }}</p>
@@ -165,7 +185,7 @@
             <p>Product classificacions: {{ product_classificacions }}</p>
             <p>product_treatment_phase: {{ product_treatment_phase }}</p>
           </div>
-          -->
+         
 
         </div> <!-- Col 9-->
       </div> <!-- Closed row -->
@@ -203,19 +223,23 @@ export default {
       product_treatment_phase: [],
       count_treatment: 0,
       product_treatments_attributes: [],
-      treatments: []
+      treatments: [],
+      cost_classification_total: '',
+      waste: '',
+      
     }
   },
   mounted () {
     this.getPhases();
     this.getProducts();
     this.getTreatments();
+    this.getCostClassification();
   },
   beforeUpdate () {
 
   },
   methods: {
-    dotFilterProductClassificacion (NewValue,index){
+    dotFilterProductClassificacion (NewValue,index){  
       var index = index 
       var NewValueTwo = NewValue
       var value = String(NewValueTwo).replace(/[.']/g,'')
@@ -229,6 +253,7 @@ export default {
       this.product_classificacions[index].weight = finalValue
     },
     dotFilterWeightClassification(){
+      this.cost_classification_total = this.cost_classification.cost * Number(this.weight_classification.replace(/[.']/g,'') ) 
       var value = String(this.weight_classification.replace(/[.']/g,''));
       var finalValue = value.replace(/[.']/g,'');
       if(value.length >= 7){
@@ -263,6 +288,17 @@ export default {
         }
       this.product_treatments_attributes[index].cost_treatment = finalValue
     },
+    dotFilterWaste(){
+      var value = String(this.waste.replace(/[.']/g,''));
+      var finalValue = value.replace(/[.']/g,'');
+      if(value.length >= 7){
+          finalValue=value.substring(0,value.length-6)+"'"+value.substring(value.length-6,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+        else if(value.length >= 4){
+          finalValue=value.substring(0,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+        this.waste = finalValue;
+    },
     getPhases: function() {
       this.$http.get('phases').then(response => {
         this.phases = response.body;
@@ -274,6 +310,13 @@ export default {
     getProducts: function() {
       this.$http.get('products').then(response => {
         this.products = response.body;
+      },response => {
+        //error
+      })
+    },
+    getCostClassification: function() {
+      this.$http.get('costs/7').then(response => {
+        this.cost_classification = response.body;
       },response => {
         //error
       })
@@ -299,6 +342,7 @@ export default {
     },
     postProductTreatmentPhaseClassification: function() {
 
+      this.addTreatmentCostClassification();
       this.cleanArrayProductClassificacions();
       this.cleanArrayProductTreatmentPhase();
 
@@ -312,6 +356,7 @@ export default {
         phase_id: this.phase_id_previous,
         product_id: Number(this.product_id),
         product_treatment_phase_id: null,
+        waste: Number(this.waste.replace(/[.']/g,'')),
         classification: this.product_classificacions
       }).then(response => {
         this.product_treatment_phase = response.body;
@@ -342,6 +387,19 @@ export default {
         this.product_classificacions[index].weight = Number(newWeight.replace(/[.']/g,''))
       }
     }, 
+    addTreatmentCostClassification: function(){
+      console.log('ddTreatmentCostClassification()')
+      this.product_treatments_attributes.push(
+        {
+          treatment_id: null,
+          name_treatment: "MANO DE OBRA CLASIFICACIÓN Y ALISTAMIENTO (SELECCIÓN Y PICADO)",
+          cost_treatment: Number(String(this.cost_classification_total).replace(/[.']/g,'')),
+          minimal_cost: null,
+          maximum_cost: null,
+          alert: false
+        } 
+      );
+    },
     // añadir tratamiento 
     addTreatment: function() {
       this.count_treatment++;

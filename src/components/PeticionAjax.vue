@@ -38,10 +38,10 @@
                       <input class="form-control col-sm-8" min="0" pattern="^[0-9].+" @input="dotFilterWeightPhase()" v-model="weight_phase" required>
                       <!-- <vue-numeric  class="form-control col-sm-8"  separator="." v-model="weight_phase" required placeholder="Peso en Kilos" ></vue-numeric> -->
                   </div>
-                  <!-- <div class="form-group text-left">
-                      <label for="formGroupExampleInput2">Precio por Kilo</label>
-                      <input type="number" class="form-control" min="1" pattern="^[0-9]+"  placeholder="0" disabled>
-                  </div> -->
+                  <div class="form-group text-left">
+                      <label for="formGroupExampleInput2">Desperdicio</label>
+                      <input  class="form-control col-sm-8" min="0" pattern="^[0-9].+" @input="dotFilterWaste()" v-model="waste"  required>
+                  </div>
     
                   <div class="form-group text-left">
                    
@@ -115,8 +115,10 @@
               </div>
 
               
-              <!-- <div>
+              <div>
                 <p>
+                  waste: {{ waste }}
+                  <br>
                   weight: {{ weight_phase }},
                   <br>  
                   phase_id_previous: {{ phase_id_previous }},
@@ -127,7 +129,7 @@
                   <br>
                   product_treatments_attributes: {{ product_treatments_attributes }}
                 </p>
-              </div> -->
+              </div>
 
           </div>
         </div>
@@ -176,7 +178,8 @@ export default {
       product_treatment_phase: [],
       error_product_treatment_phase: [],
       product_treatments_attributes_two: [], 
-      message_modal_validate_input_cost_treatment: ''
+      message_modal_validate_input_cost_treatment: '',
+      waste: ''
     }
   },
   mounted () {
@@ -211,6 +214,17 @@ export default {
           finalValue=value.substring(0,value.length-3)+"."+value.substring(value.length-3,value.length);
         }
       this.product_treatments_attributes[index].cost = finalValue
+    },
+    dotFilterWaste(){
+      var value = String(this.waste.replace(/[.']/g,''));
+      var finalValue = value.replace(/[.']/g,'');
+      if(value.length >= 7){
+          finalValue=value.substring(0,value.length-6)+"'"+value.substring(value.length-6,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+        else if(value.length >= 4){
+          finalValue=value.substring(0,value.length-3)+"."+value.substring(value.length-3,value.length);
+        }
+        this.waste = finalValue;
     },
     getProducts: function() {
       this.$http.get('products').then(response => {
@@ -254,6 +268,7 @@ export default {
         phase_id: this.phase_id,
         product_id: this.f_product_id,
         product_treatment_phase_id: null,
+        waste: Number(this.waste.replace(/[.']/g,'')),
         product_treatments_attributes: this.product_treatments_attributes
       }).then(response => {
         this.product_treatment_phase = response.body;
