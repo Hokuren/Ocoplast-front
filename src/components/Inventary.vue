@@ -8,23 +8,41 @@
         </tr>
       </thead>
       <tbody>
-        <tr scope="row" v-for="(product, index) in products" :key="index">
-          <th class="text-left">{{ product.name }} </th>
+        <tr scope="row" v-for="(product, index_p) in products" :key="index_p">
+          <th class="text-left">{{ product.name }} 
+          </th>
           <td v-for="(phase, index) in phases" :key="index">
-            <p class="text-left">Peso: {{ mapArrayInventaryWeight(product.id,phase.id) }} (Kg)<br>
-            Costo: {{ mapArrayInventaryCost(product.id,phase.id) }} (Kg)</p>
+            <p class="text-left">
+              Peso: {{ mapArrayInventaryWeight(product.id,phase.id) }} (Kg)<br>
+              Costo: {{ mapArrayInventaryCost(product.id,phase.id) }} (Kg)
+            </p>
+            <div class="text-left" v-if="index_p === products.length - 1">
+              <h4>Gastos Mensuales</h4>
+              <ul v-for="(period_cost_phase, index_pcp) in period_cost_phases" :key="index_pcp">
+                <li v-if="period_cost_phase.phase.id === phase.id && period_cost_phase.type_cost === 'porcentage' ">
+                  {{ period_cost_phase.cost.name }} <br>
+                  Valor: ${{ (period_cost_phase.cost.cost * period_cost_phase.porcentage) / 100 }} <br>
+                  Porcentaje: {{ period_cost_phase.porcentage }} % <br>
+                  <!-- Tipo: {{ period_cost_phase.type_cost }} <br>
+                  Fase: {{ period_cost_phase.phase.name }} <br> -->
+                  {{ calculateIncrementKilo((period_cost_phase.cost.cost * period_cost_phase.porcentage) / 100 ) }}
+                </li>
+              </ul>
+            </div>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <!-- <div>
+    <div>
       <h3>Parametros</h3>
+      <p> period_cost_phases.type_cost: {{ period_cost_phases[0].type_cost }} </p>
+      <p> period_cost_phases: {{ period_cost_phases }}</p>
       <p> phase_id: {{ phase_id }} </p>
       <p> product_id: {{ product_id }} </p>
       <p> phase_quantities: {{ phase_quantities }} </p>
     </div>
- -->
+
 
 
   </div> 
@@ -40,13 +58,15 @@ export default {
       phases: [],
       phase_quantities: [],
       phase_id: null,
-      product_id: null
+      product_id: null,
+      period_cost_phases: ''
     }
   },
   mounted () {
     this.getProducts();
     this.getPhases();
     this.post_phase_quantities();
+    this.getPeriodCostPhases();
   },
   beforeUpdate () {
 
@@ -63,6 +83,14 @@ export default {
       this.$http.get('phases').then(response => {
         this.phases = response.body;
         this.phases.splice( this.phases.indexOf('Pool'), 1 );
+      },response => {
+        //error
+      })
+    },
+    getPeriodCostPhases: function() {
+      this.$http.get('period_cost_phases').then(response => {
+        this.period_cost_phases = response.body;
+        //this.phases.splice( this.phases.indexOf('Pool'), 1 );
       },response => {
         //error
       })
@@ -112,8 +140,17 @@ export default {
         }
       }
       return cost_phase;
+    },
+    calculateIncrementKilo: function(cost,weight){
+      var cost = cost
+      var weight = weight 
+      var total_cost = total_cost + cost
+      var total_weight = total_weight + weight
+      var increment_kilo = (total_cost / total_weight)
+      return increment_kilo
+      console.log('calculateIncrementKilo() ', increment_kilo)
     }
-    
+
 
   }  //closed methods
 }
@@ -136,6 +173,7 @@ ul {
 li {
   display: inline-block;
   margin: 0 10px;
+  font-size: 13px; 
 }
 a {
   color: #42b983;

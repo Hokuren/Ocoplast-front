@@ -45,7 +45,7 @@
     
                   <div class="form-group text-left">
                    
-                      <br>
+                      <!-- <br>
                       <div v-if="count_treatment > 0 ">
                         <div v-for="(product_treatments_attribute, index) in product_treatments_attributes" :key="product_treatments_attribute.id">
                           <div class="card col-sm-8">
@@ -78,10 +78,7 @@
                                       @input="dotFilterCostTreatment( product_treatments_attribute.cost , index )" 
                                       v-model="product_treatments_attribute.cost"  
                                       placeholder="Costo del Tratamiento" required>
-                              <!-- <vue-numeric  class="form-control col-sm-6" currency="$" separator="." v-model="product_treatments_attribute.cost" required placeholder="Costo del Tratamiento" ></vue-numeric> -->
-                              
-                              <!-- alert -->
-                              <!-- v-if="product_treatments_attribute.alert=true" -->
+              
                               <div class="alert alert-danger" v-if="product_treatments_attribute.alert">
                                 <strong>Alerta!</strong> {{ message_modal_validate_input_cost_treatment }}
                                 <br>
@@ -96,7 +93,7 @@
                       </div>
                       <label for="formGroupExampleInput2">Tratamientos ({{ count_treatment }})</label>
                       <button type="submit" class="btn btn-success" @click="addTreatment"> + </button>
-                      <br>
+                      <br> -->
                       
                   </div>
 
